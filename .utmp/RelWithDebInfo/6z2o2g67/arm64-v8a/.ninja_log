@@ -1,0 +1,10 @@
+# ninja log v5
+21	1069	8100682093773944	GameActivity/CMakeFiles/game.dir/UGAInputKeyEvent.cpp.o	e8f41efe16d4e27d
+1	1087	8100682093899592	GameActivity/CMakeFiles/game.dir/UGAConfiguration.cpp.o	a1f8f27176a49609
+29	1133	8100682094416483	GameActivity/CMakeFiles/game.dir/UGAEntry.cpp.o	ddd49a9c3f414dd
+15	1170	8100682094750908	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	b24cbfbe898c6231
+51	1197	8100682095050096	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	f256fc1a36d681ae
+44	1245	8100682095551327	GameActivity/CMakeFiles/game.dir/UGASoftKeyboard.cpp.o	d48f60d106b2371c
+35	1403	8100682097133383	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	3098d5d602c3c61
+9	1473	8100682097803350	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	14dae994a53c9aca
+1473	1613	8100682099153777	D:/Importante/Proyecto Tostado de cafe/TostadoCafe/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/6z2o2g67/obj/arm64-v8a/libgame.so	9d115c50b621b754
