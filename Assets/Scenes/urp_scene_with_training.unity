@@ -19080,8 +19080,60 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1767192433, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 525604619}
   m_SourcePrefab: {fileID: 100100000, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
+--- !u!1 &525604618 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1767192433, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
+  m_PrefabInstance: {fileID: 525604617}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &525604619
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 525604618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.UniversalAdditionalCameraData
+  m_RenderShadows: 1
+  m_RequiresDepthTextureOption: 2
+  m_RequiresOpaqueTextureOption: 2
+  m_CameraType: 0
+  m_Cameras: []
+  m_RendererIndex: -1
+  m_VolumeLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  m_VolumeTrigger: {fileID: 0}
+  m_VolumeFrameworkUpdateModeOption: 2
+  m_RenderPostProcessing: 0
+  m_Antialiasing: 0
+  m_AntialiasingQuality: 2
+  m_StopNaN: 0
+  m_Dithering: 0
+  m_ClearDepth: 1
+  m_AllowXRRendering: 1
+  m_AllowHDROutput: 1
+  m_UseScreenCoordOverride: 0
+  m_ScreenSizeOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_ScreenCoordScaleBias: {x: 0, y: 0, z: 0, w: 0}
+  m_RequiresDepthTexture: 0
+  m_RequiresColorTexture: 0
+  m_TaaSettings:
+    m_Quality: 3
+    m_FrameInfluence: 0.1
+    m_JitterScale: 1
+    m_MipBias: 0
+    m_VarianceClampScale: 0.9
+    m_ContrastAdaptiveSharpening: 0
+  m_Version: 2
 --- !u!1 &529739784
 GameObject:
   m_ObjectHideFlags: 0
@@ -39913,6 +39965,75 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1198684853}
   m_Mesh: {fileID: 5773151401465783106, guid: 1b63f5a0a3ab731429291aff9f8a3b46, type: 3}
+--- !u!1001 &1199462350
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 0f222e0544b73db40adffaef9ed614d4, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0f222e0544b73db40adffaef9ed614d4, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0f222e0544b73db40adffaef9ed614d4, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0f222e0544b73db40adffaef9ed614d4, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0f222e0544b73db40adffaef9ed614d4, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.031939566
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0f222e0544b73db40adffaef9ed614d4, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -18.34748
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0f222e0544b73db40adffaef9ed614d4, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.48135406
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0f222e0544b73db40adffaef9ed614d4, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.47926104
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0f222e0544b73db40adffaef9ed614d4, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.5160134
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0f222e0544b73db40adffaef9ed614d4, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.5218595
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0f222e0544b73db40adffaef9ed614d4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -90.503
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0f222e0544b73db40adffaef9ed614d4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 203.088
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0f222e0544b73db40adffaef9ed614d4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -297.516
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 0f222e0544b73db40adffaef9ed614d4, type: 3}
+      propertyPath: m_Name
+      value: SambelRoaster_Quest
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 0f222e0544b73db40adffaef9ed614d4, type: 3}
 --- !u!1 &1204171089
 GameObject:
   m_ObjectHideFlags: 0
@@ -75375,3 +75496,4 @@ SceneRoots:
   - {fileID: 897474990}
   - {fileID: 1570202185}
   - {fileID: 525604617}
+  - {fileID: 1199462350}
