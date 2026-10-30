@@ -34,6 +34,7 @@ namespace DistributionCenter
         private Dictionary<NavMeshAgent, Coroutine> movementCoroutines = new Dictionary<NavMeshAgent, Coroutine>();
 
         private bool isAgent0Running = false;
+        private bool hasValidAgents;
         private Coroutine animateColorRoutine;
 
         private Color colorA = new Color32(0x16, 0xB5, 0x53, 0xFF);
@@ -41,14 +42,23 @@ namespace DistributionCenter
 
         void Start()
         {
+            hasValidAgents = HasValidAgents();
+            if (!hasValidAgents)
+            {
+                enabled = false;
+                return;
+            }
+
             for (int i = 0; i < navAgentArr.Length; i++)
             {
                 var agent = navAgentArr[i];
 
-                if (agentEnabledArr.Length <= i || !agentEnabledArr[i])
+                if (agent == null)
+                    continue;
+
+                if (!IsAgentEnabled(i))
                 {
-                    if (agent != null)
-                        agent.gameObject.SetActive(false);
+                    agent.gameObject.SetActive(false);
                     continue;
                 }
 
@@ -68,12 +78,17 @@ namespace DistributionCenter
 
         void Update()
         {
+            if (!hasValidAgents)
+                return;
+
             for (int i = 0; i < navAgentArr.Length; i++)
             {
-                if (agentEnabledArr.Length <= i || !agentEnabledArr[i])
+                if (!IsAgentEnabled(i))
                     continue;
 
                 var agent = navAgentArr[i];
+                if (agent == null)
+                    continue;
 
                 if (i == 0 && !isAgent0Running)
                     continue;
@@ -113,6 +128,9 @@ namespace DistributionCenter
 
         public void AssignRandomTarget(NavMeshAgent agent, int agentIndex)
         {
+            if (agent == null)
+                return;
+
             if (agentTargetsArr == null || agentIndex >= agentTargetsArr.Length)
                 return;
 
@@ -141,6 +159,9 @@ namespace DistributionCenter
 
         public void ForceAssignNewTarget(NavMeshAgent agent, int agentIndex)
         {
+            if (agent == null)
+                return;
+
             if (movementCoroutines.ContainsKey(agent) && movementCoroutines[agent] != null)
             {
                 StopCoroutine(movementCoroutines[agent]);
@@ -152,10 +173,13 @@ namespace DistributionCenter
 
         void ToggleAgent0()
         {
-            if (agentEnabledArr.Length == 0 || !agentEnabledArr[0])
+            if (!hasValidAgents || navAgentArr == null || navAgentArr.Length == 0 || !IsAgentEnabled(0))
                 return;
 
             var agent = navAgentArr[0];
+            if (agent == null)
+                return;
+
             isAgent0Running = !isAgent0Running;
 
             if (!isAgent0Running)
@@ -183,6 +207,9 @@ namespace DistributionCenter
 
         void UpdateButtonUI()
         {
+            if (startStopBTN == null)
+                return;
+
             if (startStopBTNText != null)
                 startStopBTNText.text = isAgent0Running ? "AUTO MODE ON" : "AUTO MODE ON";
 
@@ -195,6 +222,25 @@ namespace DistributionCenter
                 cb.selectedColor = colorA;
                 startStopBTN.colors = cb;
             }
+        }
+
+        private bool HasValidAgents()
+        {
+            if (navAgentArr == null || navAgentArr.Length == 0)
+                return false;
+
+            for (int i = 0; i < navAgentArr.Length; i++)
+            {
+                if (navAgentArr[i] != null)
+                    return true;
+            }
+
+            return false;
+        }
+
+        private bool IsAgentEnabled(int agentIndex)
+        {
+            return agentEnabledArr != null && agentIndex >= 0 && agentIndex < agentEnabledArr.Length && agentEnabledArr[agentIndex];
         }
 
         IEnumerator AnimateButtonColor()
