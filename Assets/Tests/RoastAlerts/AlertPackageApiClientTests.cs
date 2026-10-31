@@ -113,6 +113,21 @@ namespace ToastedVr.RoastAlerts.Tests
         }
 
         [UnityTest]
+        public IEnumerator RejectsAnUnknownSchemaVersion()
+        {
+            var package = AlertTestData.PackageFor("BEGINNER");
+            package.SchemaVersion = AlertPackage.SupportedSchemaVersion + 1;
+            using (var backend = new FakeBackend(_ => (200, RoastJson.Serialize(package))))
+            {
+                CreateClient(backend);
+
+                yield return Fetch(null);
+
+                Assert.AreEqual(RoastApiFailure.Unexpected, result.Failure);
+            }
+        }
+
+        [UnityTest]
         public IEnumerator RenewsTheSessionOnceOnUnauthorized()
         {
             using (var backend = new FakeBackend(request =>

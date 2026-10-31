@@ -84,7 +84,7 @@ namespace ToastedVr.RoastAlerts
             }
 
             var package = RoastJson.TryDeserialize<AlertPackage>(text);
-            if (package?.Rules == null || package.Signals == null || package.Channel == null)
+            if (!AlertPackage.IsUsable(package))
             {
                 LogDiagnostic(RoastApiFailure.Unexpected, request.responseCode);
                 return new RoastApiResult<AlertPackageDownload>(null, RoastApiFailure.Unexpected, request.responseCode, null);

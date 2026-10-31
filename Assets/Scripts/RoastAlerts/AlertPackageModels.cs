@@ -15,6 +15,11 @@ namespace ToastedVr.RoastAlerts
         public SignalSettings Signals { get; set; }
         public ChannelPolicy Channel { get; set; }
         public List<AlertRuleModel> Rules { get; set; } = new List<AlertRuleModel>();
+
+        // Un schemaVersion desconocido significa que cambió la forma de las reglas: ese paquete se descarta.
+        public static bool IsUsable(AlertPackage package) =>
+            package != null && package.SchemaVersion == SupportedSchemaVersion
+            && package.Rules != null && package.Signals != null && package.Channel != null;
     }
 
     public sealed class SignalSettings
