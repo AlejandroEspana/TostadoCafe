@@ -7,7 +7,8 @@ namespace ToastedVr.SessionRefresh.Tests
     // Hace en edit mode lo que StartCoroutine hace en juego: avanza varias corrutinas, con las anidadas, un frame a la vez.
     public sealed class CoroutineDriver
     {
-        private const int MaxFrames = 2000;
+        // Por tiempo y no por frames: en batchmode los frames son muy rápidos y un puerto cerrado tarda segundos en responder.
+        private const double MaxSeconds = 30;
 
         private readonly List<Stack<IEnumerator>> routines = new List<Stack<IEnumerator>>();
 
@@ -20,10 +21,10 @@ namespace ToastedVr.SessionRefresh.Tests
 
         public IEnumerator RunUntilDone()
         {
-            var frames = 0;
+            var clock = System.Diagnostics.Stopwatch.StartNew();
             while (Step())
             {
-                Assert.Less(frames++, MaxFrames, "Las corrutinas no terminaron");
+                Assert.Less(clock.Elapsed.TotalSeconds, MaxSeconds, "Las corrutinas no terminaron");
                 yield return null;
             }
         }

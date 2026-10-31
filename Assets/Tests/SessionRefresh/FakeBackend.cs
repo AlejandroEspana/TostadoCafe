@@ -14,6 +14,7 @@ namespace ToastedVr.SessionRefresh.Tests
         {
             public string Method;
             public string Path;
+            public string Query;
             public string Authorization;
             public string Body;
         }
@@ -65,6 +66,7 @@ namespace ToastedVr.SessionRefresh.Tests
                 {
                     Method = context.Request.HttpMethod,
                     Path = context.Request.Url.AbsolutePath,
+                    Query = context.Request.Url.Query,
                     Authorization = context.Request.Headers["Authorization"],
                     Body = body
                 };
