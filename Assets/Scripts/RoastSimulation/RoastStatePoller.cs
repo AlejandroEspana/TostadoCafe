@@ -25,12 +25,17 @@ namespace ToastedVr.RoastSimulation
         public event Action<RoastState> StateReceived;
         public event Action<RoastApiResult<SimulationPoll>> PollFailed;
 
+        // La generación se toma al llamar y no en el primer paso de la corrutina, para que un Stop inmediato también cuente.
         public IEnumerator Run(string simulationId, int startTick)
         {
             var myGeneration = ++generation;
             Buffer.Reset(startTick);
             IsRunning = true;
+            return Loop(simulationId, myGeneration);
+        }
 
+        private IEnumerator Loop(string simulationId, int myGeneration)
+        {
             while (myGeneration == generation)
             {
                 RoastApiResult<SimulationPoll> result = null;
