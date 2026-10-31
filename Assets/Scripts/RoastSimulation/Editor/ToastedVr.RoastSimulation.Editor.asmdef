@@ -3,6 +3,7 @@
     "rootNamespace": "ToastedVr.RoastSimulation.Editor",
     "references": [
         "ToastedVr.RoastSimulation",
+        "ToastedVr.RoastVoice",
         "Unity.XR.Interaction.Toolkit",
         "Unity.TextMeshPro"
     ],
