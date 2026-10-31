@@ -5,6 +5,7 @@
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "ToastedVr.RoastSimulation",
+        "ToastedVr.RoastSimulation.Editor",
         "ToastedVr.SessionRefresh",
         "ToastedVr.SessionRefresh.Tests"
     ],
