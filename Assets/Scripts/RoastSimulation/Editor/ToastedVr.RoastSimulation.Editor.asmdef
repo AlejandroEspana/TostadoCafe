@@ -4,6 +4,7 @@
     "references": [
         "ToastedVr.RoastSimulation",
         "ToastedVr.RoastVoice",
+        "ToastedVr.RoastAlerts",
         "Unity.XR.Interaction.Toolkit",
         "Unity.TextMeshPro"
     ],

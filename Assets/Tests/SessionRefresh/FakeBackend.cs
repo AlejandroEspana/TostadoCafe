@@ -17,6 +17,7 @@ namespace ToastedVr.SessionRefresh.Tests
             public string Query;
             public string Authorization;
             public string ContentType;
+            public string IfNoneMatch;
             public string Body;
             public byte[] BodyBytes;
         }
@@ -38,6 +39,8 @@ namespace ToastedVr.SessionRefresh.Tests
         public string BaseUrl { get; }
 
         public ConcurrentQueue<ReceivedRequest> Requests { get; } = new ConcurrentQueue<ReceivedRequest>();
+
+        public ConcurrentDictionary<string, string> ResponseHeaders { get; } = new ConcurrentDictionary<string, string>();
 
         public void Dispose()
         {
@@ -72,6 +75,7 @@ namespace ToastedVr.SessionRefresh.Tests
                     Query = context.Request.Url.Query,
                     Authorization = context.Request.Headers["Authorization"],
                     ContentType = context.Request.ContentType,
+                    IfNoneMatch = context.Request.Headers["If-None-Match"],
                     Body = Encoding.UTF8.GetString(bodyBytes),
                     BodyBytes = bodyBytes
                 };
@@ -81,6 +85,11 @@ namespace ToastedVr.SessionRefresh.Tests
                 var bytes = Encoding.UTF8.GetBytes(responseBody ?? string.Empty);
                 context.Response.StatusCode = status;
                 context.Response.ContentType = "application/json";
+                foreach (var header in ResponseHeaders)
+                {
+                    context.Response.AddHeader(header.Key, header.Value);
+                }
+
                 context.Response.ContentLength64 = bytes.Length;
                 context.Response.OutputStream.Write(bytes, 0, bytes.Length);
                 context.Response.OutputStream.Close();

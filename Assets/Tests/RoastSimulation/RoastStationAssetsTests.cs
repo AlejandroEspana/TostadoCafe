@@ -48,6 +48,8 @@ namespace ToastedVr.RoastSimulation.Tests
             Assert.Less(configuration.PollIntervalSeconds, 120f);
             Assert.Greater(configuration.DischargeMaxRetries, 0);
             Assert.Greater(configuration.DischargeRetryDelaySeconds, 0f);
+            Assert.AreEqual(60, configuration.MaxDischargeAlerts);
+            Assert.AreEqual(40, configuration.MaxAlertIdLength);
         }
 
         [Test]

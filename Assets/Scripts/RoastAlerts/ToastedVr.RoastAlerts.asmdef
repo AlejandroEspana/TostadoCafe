@@ -1,0 +1,21 @@
+{
+    "name": "ToastedVr.RoastAlerts",
+    "rootNamespace": "ToastedVr.RoastAlerts",
+    "references": [
+        "ToastedVr.RoastSimulation",
+        "ToastedVr.RoastVoice",
+        "ToastedVr.SessionRefresh",
+        "Unity.TextMeshPro"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "Newtonsoft.Json.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

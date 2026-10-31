@@ -17,6 +17,8 @@ MonoBehaviour:
   pollIntervalSeconds: 1
   dischargeRetryDelaySeconds: 1
   dischargeMaxRetries: 3
+  maxDischargeAlerts: 60
+  maxAlertIdLength: 40
   minGasPercent: 0
   maxGasPercent: 100
   gasStepPercent: 5

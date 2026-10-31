@@ -5,6 +5,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
+using ToastedVr.RoastAlerts;
 using ToastedVr.RoastVoice;
 
 namespace ToastedVr.RoastSimulation.Editor
@@ -18,6 +19,7 @@ namespace ToastedVr.RoastSimulation.Editor
         private const string MessagesPath = "Assets/Settings/RoastSimulation/RoastStationMessages.asset";
         private const string VoiceConfigurationPath = "Assets/Settings/RoastVoice/RoastVoiceConfiguration.asset";
         private const string VoiceMessagesPath = "Assets/Settings/RoastVoice/RoastVoiceMessages.asset";
+        private const string AlertsConfigurationPath = "Assets/Settings/RoastAlerts/RoastAlertsConfiguration.asset";
 
         // El bootstrap vive en Assembly-CSharp porque usa el login; este asmdef de editor no puede referenciarlo.
         private const string BootstrapTypeName = "ToastedVr.RoastSimulationBootstrap.RoastStationBootstrap, Assembly-CSharp";
@@ -58,6 +60,7 @@ namespace ToastedVr.RoastSimulation.Editor
             var messages = LoadRequired<RoastStationMessages>(MessagesPath);
             var voiceConfiguration = LoadRequired<RoastVoiceConfiguration>(VoiceConfigurationPath);
             var voiceMessages = LoadRequired<RoastVoiceMessages>(VoiceMessagesPath);
+            var alertsConfiguration = LoadRequired<RoastAlertsConfiguration>(AlertsConfigurationPath);
             var authenticationConfiguration = FindSingleAsset(AuthenticationConfigurationType);
             var bootstrapType = Type.GetType(BootstrapTypeName)
                 ?? throw new InvalidOperationException($"{BootstrapTypeName} was not found.");
@@ -105,10 +108,15 @@ namespace ToastedVr.RoastSimulation.Editor
                     ("assistant", voiceAssistant), ("talkButton", talk.interactable),
                     ("talkLabel", talk.label), ("subtitleText", subtitleText));
 
+                var alerts = root.AddComponent<RoastAlertsController>();
+                SetReferences(alerts,
+                    ("configuration", alertsConfiguration), ("station", controller),
+                    ("voiceAssistant", voiceAssistant), ("player", player));
+
                 var bootstrap = root.AddComponent(bootstrapType);
                 SetReferences(bootstrap,
                     ("authenticationConfiguration", authenticationConfiguration), ("controller", controller),
-                    ("voiceAssistant", voiceAssistant));
+                    ("voiceAssistant", voiceAssistant), ("alerts", alerts));
 
                 EnsureFolder(Path.GetDirectoryName(prefabPath)?.Replace('\\', '/'));
                 return PrefabUtility.SaveAsPrefabAsset(root, prefabPath, out var saved) && saved

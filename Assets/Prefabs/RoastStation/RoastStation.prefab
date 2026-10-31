@@ -230,6 +230,7 @@ GameObject:
   - component: {fileID: 5065046657504073480}
   - component: {fileID: 2170566201286369612}
   - component: {fileID: 3329802316980101193}
+  - component: {fileID: 4538699393777973484}
   - component: {fileID: 5750282143053745072}
   m_Layer: 0
   m_Name: RoastStation
@@ -458,6 +459,22 @@ MonoBehaviour:
   talkButton: {fileID: 2922328994027428260}
   talkLabel: {fileID: 1489828188915735687}
   subtitleText: {fileID: 2186983625266252345}
+--- !u!114 &4538699393777973484
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1726350134203376763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1160e62d35554278b6f913a5f031ea2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ToastedVr.RoastAlerts::ToastedVr.RoastAlerts.RoastAlertsController
+  configuration: {fileID: 11400000, guid: 3a9f61273f964a3a97a7f7761a31f7e1, type: 2}
+  station: {fileID: 408540785053487455}
+  voiceAssistant: {fileID: 2170566201286369612}
+  player: {fileID: 5065046657504073480}
 --- !u!114 &5750282143053745072
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -473,6 +490,7 @@ MonoBehaviour:
   authenticationConfiguration: {fileID: 11400000, guid: 5cf6f17933f645b4b971abc0501f2920, type: 2}
   controller: {fileID: 408540785053487455}
   voiceAssistant: {fileID: 2170566201286369612}
+  alerts: {fileID: 4538699393777973484}
 --- !u!1 &2177996164956048519
 GameObject:
   m_ObjectHideFlags: 0

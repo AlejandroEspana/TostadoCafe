@@ -13,6 +13,7 @@ namespace ToastedVr.RoastSimulation
 
         private RoastSimulationApiClient client;
         private RoastStatePoller poller;
+        private DeliveredAlertLog deliveredAlerts;
         private int? pendingGas;
         private bool gasInFlight;
         private bool showingOfflineMessage;
@@ -21,6 +22,10 @@ namespace ToastedVr.RoastSimulation
         public event Action Changed;
         public event Action<string> MessageChanged;
         public event Action<RoastSessionSummary> Finished;
+
+        // Para las alertas: cada tick nuevo en orden, y el inicio de cada simulación.
+        public event Action<RoastState> TickReceived;
+        public event Action<string> RoastStarted;
 
         public RoastSimulationConfiguration Configuration => configuration;
         public RoastStationMessages Messages => messages;
@@ -36,6 +41,8 @@ namespace ToastedVr.RoastSimulation
             client = new RoastSimulationApiClient(backendBaseUrl, configuration.SimulationsPath, configuration.RequestTimeoutSeconds, sender);
             poller = new RoastStatePoller(client, configuration.PollIntervalSeconds);
             poller.StateReceived += OnPolledState;
+            poller.TickReceived += tick => TickReceived?.Invoke(tick);
+            deliveredAlerts = new DeliveredAlertLog(configuration.MaxDischargeAlerts, configuration.MaxAlertIdLength);
             poller.PollFailed += result => HandleFailure(result.Failure, result.Error);
             Changed?.Invoke();
         }
@@ -81,6 +88,15 @@ namespace ToastedVr.RoastSimulation
             }
         }
 
+        // Toda alerta entregada, por voz o en subtítulo, va en la traza de la descarga.
+        public void RecordDeliveredAlert(string alertId, int roastSeconds)
+        {
+            if (IsPowered)
+            {
+                deliveredAlerts.Record(alertId, roastSeconds);
+            }
+        }
+
         public void ShowSessionExpired()
         {
             sessionExpired = true;
@@ -104,8 +120,10 @@ namespace ToastedVr.RoastSimulation
             }
 
             SimulationId = result.Value.SimulationId;
+            deliveredAlerts.Clear();
             ClearMessage();
             ApplyState(result.Value.State);
+            RoastStarted?.Invoke(SimulationId);
             StartCoroutine(poller.Run(SimulationId, result.Value.State?.Tick ?? 0));
         }
 
@@ -148,11 +166,12 @@ namespace ToastedVr.RoastSimulation
             SetBusy(true);
             SetMessage(messages.DischargingMessage);
             var retries = 0;
+            var alerts = deliveredAlerts.Snapshot();
 
             while (true)
             {
                 RoastApiResult<DischargeResult> result = null;
-                yield return client.Discharge(SimulationId, null, r => result = r);
+                yield return client.Discharge(SimulationId, alerts, r => result = r);
 
                 if (result.IsSuccess)
                 {
@@ -236,6 +255,7 @@ namespace ToastedVr.RoastSimulation
             SimulationId = null;
             State = null;
             pendingGas = null;
+            deliveredAlerts.Clear();
             Changed?.Invoke();
         }
 
