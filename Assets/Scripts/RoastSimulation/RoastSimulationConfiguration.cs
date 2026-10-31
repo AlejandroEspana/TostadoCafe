@@ -15,6 +15,10 @@ namespace ToastedVr.RoastSimulation
         [Tooltip("At the turning point the backend answers 409 for one tick; the discharge is repeated after this delay.")]
         [SerializeField, Min(0.1f)] private float dischargeRetryDelaySeconds;
         [SerializeField, Min(0)] private int dischargeMaxRetries;
+        [Tooltip("Same limit the backend validates in the trace (roast-trace.max-alerts).")]
+        [SerializeField, Min(0)] private int maxDischargeAlerts;
+        [Tooltip("Same limit the backend validates in the trace (roast-trace.max-alert-id-length).")]
+        [SerializeField, Min(1)] private int maxAlertIdLength;
 
         [Header("Gas knob")]
         [SerializeField] private int minGasPercent;
@@ -34,6 +38,8 @@ namespace ToastedVr.RoastSimulation
         public float PollIntervalSeconds => pollIntervalSeconds;
         public float DischargeRetryDelaySeconds => dischargeRetryDelaySeconds;
         public int DischargeMaxRetries => dischargeMaxRetries;
+        public int MaxDischargeAlerts => maxDischargeAlerts;
+        public int MaxAlertIdLength => maxAlertIdLength;
         public int MinGasPercent => minGasPercent;
         public int MaxGasPercent => maxGasPercent;
         public int GasStepPercent => gasStepPercent;
