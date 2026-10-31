@@ -1,4 +1,5 @@
 using ToastedVr.Authentication;
+using ToastedVr.RoastAlerts;
 using ToastedVr.RoastSimulation;
 using ToastedVr.RoastVoice;
 using ToastedVr.SessionRefreshBootstrap;
@@ -13,6 +14,7 @@ namespace ToastedVr.RoastSimulationBootstrap
         [SerializeField] private UnityAuthenticationConfiguration authenticationConfiguration;
         [SerializeField] private RoastStationController controller;
         [SerializeField] private VoiceAssistantController voiceAssistant;
+        [SerializeField] private RoastAlertsController alerts;
 
         private SessionRefreshService refreshService;
 
@@ -27,6 +29,7 @@ namespace ToastedVr.RoastSimulationBootstrap
 
             controller.Initialize(authenticationConfiguration.BackendBaseUrl, refreshService.Sender);
             voiceAssistant.Initialize(authenticationConfiguration.BackendBaseUrl, refreshService.Sender);
+            alerts.Initialize(authenticationConfiguration.BackendBaseUrl, refreshService.Sender);
             refreshService.SessionExpired += controller.ShowSessionExpired;
         }
 
