@@ -105,7 +105,8 @@ namespace ToastedVr.RoastAlerts.Tests
             tracker.Update(Sample("ROASTING", 170, 101));
             tracker.Update(Sample("ROASTING", 170, 102));
 
-            Assert.AreEqual(2, tracker.Update(Sample("ROASTING", 150, 103)).StagnationSeconds, "fuera de Maillard");
+            // El primer tick se compara consigo mismo, como en la referencia: tres ticks iguales dan 3.
+            Assert.AreEqual(3, tracker.Update(Sample("ROASTING", 150, 103)).StagnationSeconds, "fuera de Maillard");
             tracker.Update(Sample("ROASTING", 170, 104, firstCrack: true));
             Assert.AreEqual(tracker.Update(Sample("ROASTING", 160, 105, firstCrack: true)).StagnationSeconds,
                 tracker.Update(Sample("ROASTING", 160, 106, firstCrack: true)).StagnationSeconds);
