@@ -41,9 +41,10 @@ namespace ToastedVr.RoastSimulation
             var fraction = (ClampAngle(angle) - minAngle) / (maxAngle - minAngle);
             var rawGas = minGas + fraction * (maxGas - minGas);
             var steps = (int)Math.Round((rawGas - minGas) / step, MidpointRounding.AwayFromZero);
+            var snappedGas = Math.Min(minGas + steps * step, maxGas);
 
-            // El tope siempre se alcanza aunque el rango no sea múltiplo del salto.
-            return Math.Min(minGas + steps * step, maxGas);
+            // El tope siempre se alcanza aunque el rango no sea múltiplo del salto: gana el más cercano de los dos.
+            return maxGas - rawGas < Math.Abs(rawGas - snappedGas) ? maxGas : snappedGas;
         }
 
         public float AngleForGas(int gas)
