@@ -225,6 +225,7 @@ GameObject:
   - component: {fileID: 9123713064123897805}
   - component: {fileID: 408540785053487455}
   - component: {fileID: 6941788365707624453}
+  - component: {fileID: 2215851857147742762}
   - component: {fileID: 1542916986709210248}
   - component: {fileID: 1264689611573914790}
   - component: {fileID: 5065046657504073480}
@@ -297,6 +298,52 @@ MonoBehaviour:
   controller: {fileID: 408540785053487455}
   statusText: {fileID: 5551767508090553875}
   messageText: {fileID: 5706757105770844184}
+--- !u!114 &2215851857147742762
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1726350134203376763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba51dded6c94471188dfe257463a36fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ToastedVr.RoastSimulation::ToastedVr.RoastSimulation.RoastStationVisualEvents
+  controller: {fileID: 408540785053487455}
+  poweredOn:
+    m_PersistentCalls:
+      m_Calls: []
+  poweredOff:
+    m_PersistentCalls:
+      m_Calls: []
+  charged:
+    m_PersistentCalls:
+      m_Calls: []
+  turningPointReached:
+    m_PersistentCalls:
+      m_Calls: []
+  firstCrack:
+    m_PersistentCalls:
+      m_Calls: []
+  secondCrack:
+    m_PersistentCalls:
+      m_Calls: []
+  grainStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  burnWarningStarted:
+    m_PersistentCalls:
+      m_Calls: []
+  burnWarningEnded:
+    m_PersistentCalls:
+      m_Calls: []
+  burned:
+    m_PersistentCalls:
+      m_Calls: []
+  discharged:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &1542916986709210248
 MonoBehaviour:
   m_ObjectHideFlags: 0
