@@ -13,7 +13,8 @@ namespace ToastedVr.RoastVoice
     {
         public static RecordingVerdict Check(int sampleCount, int sampleRateHz, float minSeconds, int maxBytes)
         {
-            if (sampleRateHz <= 0 || (float)sampleCount / sampleRateHz < minSeconds)
+            // Se compara en muestras enteras: 0,3 s en float no es exacto y dejaría fuera justo el mínimo.
+            if (sampleRateHz <= 0 || sampleCount < (int)System.Math.Round(minSeconds * sampleRateHz))
             {
                 return RecordingVerdict.TooShort;
             }
