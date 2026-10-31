@@ -16,7 +16,9 @@ namespace ToastedVr.SessionRefresh.Tests
             public string Path;
             public string Query;
             public string Authorization;
+            public string ContentType;
             public string Body;
+            public byte[] BodyBytes;
         }
 
         private readonly HttpListener listener = new HttpListener();
@@ -56,10 +58,11 @@ namespace ToastedVr.SessionRefresh.Tests
                     return;
                 }
 
-                string body;
-                using (var reader = new StreamReader(context.Request.InputStream, Encoding.UTF8))
+                byte[] bodyBytes;
+                using (var buffer = new MemoryStream())
                 {
-                    body = reader.ReadToEnd();
+                    context.Request.InputStream.CopyTo(buffer);
+                    bodyBytes = buffer.ToArray();
                 }
 
                 var received = new ReceivedRequest
@@ -68,7 +71,9 @@ namespace ToastedVr.SessionRefresh.Tests
                     Path = context.Request.Url.AbsolutePath,
                     Query = context.Request.Url.Query,
                     Authorization = context.Request.Headers["Authorization"],
-                    Body = body
+                    ContentType = context.Request.ContentType,
+                    Body = Encoding.UTF8.GetString(bodyBytes),
+                    BodyBytes = bodyBytes
                 };
                 Requests.Enqueue(received);
 
