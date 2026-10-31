@@ -1,0 +1,75 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afbb110675f14a6e88742525b3589a26, type: 3}
+  m_Name: RoastStationMessages
+  m_EditorClassIdentifier:
+  powerOnLabel: "Encender"
+  powerOffLabel: "Apagar"
+  chargeLabel: "Cargar"
+  dischargeLabel: "Descargar"
+  gasKnobFormat: "Gas {0} %"
+  phaseFormat: "Estado: {0}"
+  temperatureFormat: "Temperatura: {0:0.0} °C"
+  roastTimeFormat: "Tiempo de tueste: {0}"
+  gasFormat: "Gas: {0} %"
+  riseFormat: "Subida: {0:0} °C/min"
+  grainFormat: "Grano: {0}"
+  firstCrackFormat: "Primer crack: {0}"
+  secondCrackFormat: "Segundo crack: {0}"
+  crackPendingText: "todavía no"
+  scoreFormat: "Nota: {0} ({1})"
+  phaseOffName: "Apagada"
+  phaseNames:
+  - key: PREHEAT
+    text: "Precalentando"
+  - key: READY
+    text: "Lista para cargar"
+  - key: CHARGE_DIP
+    text: "Cargando el grano"
+  - key: ROASTING
+    text: "Tostando"
+  - key: FINISHED
+    text: "Tueste terminado"
+  grainStateNames:
+  - key: DRYING
+    text: "Secado"
+  - key: MAILLARD
+    text: "Maillard"
+  - key: FIRST_CRACK
+    text: "Primer crack"
+  - key: DARK
+    text: "Oscuro"
+  - key: SECOND_CRACK
+    text: "Segundo crack"
+  - key: BURNED
+    text: "Quemado"
+  gradeNames:
+  - key: EXCELLENT
+    text: "Excelente"
+  - key: GOOD
+    text: "Buena"
+  - key: FAIR
+    text: "Regular"
+  - key: POOR
+    text: "Deficiente"
+  burnedAlarm: "El café se quemó"
+  bakedAlarm: "El café se horneó: el Maillard se estancó"
+  burnWarningAlarm: "Cuidado: te acercas al límite de quemado"
+  alarmLimitExceededAlarm: "La temperatura pasó la alarma de seguridad del equipo"
+  chargeOvershootAlarm: "El aire pasó la temperatura de carga planeada"
+  connectingMessage: "Conectando con el tostador..."
+  offlineMessage: "Sin conexión con el simulador. Sigo intentando..."
+  sessionExpiredMessage: "Tu sesión venció, vuelve a ingresar"
+  simulationLostMessage: "El tueste se perdió. Enciende el tostador para empezar otro."
+  dischargingMessage: "Descargando..."
+  evaluationPendingMessage: "La calificación de tus decisiones está en proceso."
+  unexpectedErrorMessage: "No pude completar la acción. Inténtalo de nuevo."
