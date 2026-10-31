@@ -130,7 +130,7 @@ namespace ToastedVr.RoastVoice
                 yield break;
             }
 
-            ShowSubtitle(result.Value.Answer);
+            ShowSubtitle(AnswerSubtitle(result.Value));
             var clip = VoiceClipFactory.TryCreate(result.Value.Audio, AnswerClipName);
             if (clip == null)
             {
@@ -146,6 +146,14 @@ namespace ToastedVr.RoastVoice
             }
 
             SetState(VoiceAssistantState.Idle);
+        }
+
+        // Mostrar lo que entendió la transcripción le deja ver al jugador si lo oyó mal.
+        private string AnswerSubtitle(VoiceAnswer answer)
+        {
+            return string.IsNullOrWhiteSpace(answer.Question)
+                ? answer.Answer
+                : string.Format(messages.QuestionFormat, answer.Question) + "\n" + answer.Answer;
         }
 
         // Con 401 el refresh ya decidió: si lo rechazaron, SessionRefreshService avisa y vuelve al login.
