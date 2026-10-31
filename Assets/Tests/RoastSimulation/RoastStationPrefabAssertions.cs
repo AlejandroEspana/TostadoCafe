@@ -30,8 +30,12 @@ namespace ToastedVr.RoastSimulation.Tests
             AssertCount(behaviours, "RoastStationDisplay", 1);
             AssertCount(behaviours, "RoastStationControls", 1);
             AssertCount(behaviours, "RoastStationBootstrap", 1);
-            AssertCount(behaviours, "XRSimpleInteractable", 3);
+            AssertCount(behaviours, "XRSimpleInteractable", 4);
             AssertCount(behaviours, "GasKnobInteractable", 1);
+            AssertCount(behaviours, "VoiceAssistantController", 1);
+            AssertCount(behaviours, "VoiceAssistantControls", 1);
+            AssertCount(behaviours, "VoiceAnswerPlayer", 1);
+            Assert.IsNotNull(prefab.GetComponent<AudioSource>(), "falta el AudioSource de la voz");
         }
 
         private static void AssertCount(MonoBehaviour[] behaviours, string typeName, int expected)

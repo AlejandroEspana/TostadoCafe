@@ -5,6 +5,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
+using ToastedVr.RoastVoice;
 
 namespace ToastedVr.RoastSimulation.Editor
 {
@@ -15,23 +16,28 @@ namespace ToastedVr.RoastSimulation.Editor
         public const string PrefabPath = "Assets/Prefabs/RoastStation/RoastStation.prefab";
         private const string ConfigurationPath = "Assets/Settings/RoastSimulation/RoastSimulationConfiguration.asset";
         private const string MessagesPath = "Assets/Settings/RoastSimulation/RoastStationMessages.asset";
+        private const string VoiceConfigurationPath = "Assets/Settings/RoastVoice/RoastVoiceConfiguration.asset";
+        private const string VoiceMessagesPath = "Assets/Settings/RoastVoice/RoastVoiceMessages.asset";
 
         // El bootstrap vive en Assembly-CSharp porque usa el login; este asmdef de editor no puede referenciarlo.
         private const string BootstrapTypeName = "ToastedVr.RoastSimulationBootstrap.RoastStationBootstrap, Assembly-CSharp";
         private const string AuthenticationConfigurationType = "UnityAuthenticationConfiguration";
 
         // Medidas en metros. El jugador mira la estación hacia +Z.
-        private static readonly Vector3 BoardCenter = new Vector3(0f, 1.25f, 0.03f);
-        private static readonly Vector3 BoardSize = new Vector3(1.2f, 1f, 0.02f);
+        private static readonly Vector3 BoardCenter = new Vector3(0f, 1.15f, 0.03f);
+        private static readonly Vector3 BoardSize = new Vector3(1.2f, 1.2f, 0.02f);
         private static readonly Vector3 StatusCenter = new Vector3(0f, 1.48f, 0f);
         private static readonly Vector2 StatusSize = new Vector2(1.1f, 0.5f);
         private static readonly Vector3 MessageCenter = new Vector3(0f, 1.16f, 0f);
         private static readonly Vector2 MessageSize = new Vector2(1.1f, 0.1f);
         private const float ControlsHeight = 0.97f;
         private const float LabelsHeight = 0.86f;
-        private static readonly float[] ControlColumns = { -0.42f, -0.14f, 0.14f, 0.42f };
+        private static readonly float[] ControlColumns = { -0.48f, -0.24f, 0f, 0.24f, 0.48f };
         private static readonly Vector3 ButtonSize = new Vector3(0.08f, 0.08f, 0.04f);
-        private static readonly Vector2 LabelSize = new Vector2(0.26f, 0.06f);
+        private static readonly Vector2 LabelSize = new Vector2(0.22f, 0.06f);
+        private static readonly Vector3 SubtitleCenter = new Vector3(0f, 0.68f, 0f);
+        private static readonly Vector2 SubtitleSize = new Vector2(1.1f, 0.22f);
+        private const float VoiceSpatialBlend = 1f;
         private const float StatusFontSize = 0.3f;
         private const float LabelFontSize = 0.25f;
         private static readonly Vector3 KnobBodyScale = new Vector3(0.07f, 0.015f, 0.07f);
@@ -50,6 +56,8 @@ namespace ToastedVr.RoastSimulation.Editor
         {
             var configuration = LoadRequired<RoastSimulationConfiguration>(ConfigurationPath);
             var messages = LoadRequired<RoastStationMessages>(MessagesPath);
+            var voiceConfiguration = LoadRequired<RoastVoiceConfiguration>(VoiceConfigurationPath);
+            var voiceMessages = LoadRequired<RoastVoiceMessages>(VoiceMessagesPath);
             var authenticationConfiguration = FindSingleAsset(AuthenticationConfigurationType);
             var bootstrapType = Type.GetType(BootstrapTypeName)
                 ?? throw new InvalidOperationException($"{BootstrapTypeName} was not found.");
@@ -68,6 +76,8 @@ namespace ToastedVr.RoastSimulation.Editor
                 var charge = CreateButton("ChargeButton", root.transform, ControlColumns[1]);
                 var discharge = CreateButton("DischargeButton", root.transform, ControlColumns[2]);
                 var knob = CreateKnob(root.transform, ControlColumns[3]);
+                var talk = CreateButton("TalkButton", root.transform, ControlColumns[4]);
+                var subtitleText = CreateText("Subtitle", root.transform, SubtitleCenter, SubtitleSize, StatusFontSize, TextAlignmentOptions.Top);
 
                 var display = root.AddComponent<RoastStationDisplay>();
                 SetReferences(display, ("controller", controller), ("statusText", statusText), ("messageText", messageText));
@@ -80,8 +90,25 @@ namespace ToastedVr.RoastSimulation.Editor
                     ("powerLabel", power.label), ("chargeLabel", charge.label),
                     ("dischargeLabel", discharge.label), ("gasLabel", knob.label));
 
+                var audioSource = root.AddComponent<AudioSource>();
+                audioSource.playOnAwake = false;
+                audioSource.spatialBlend = VoiceSpatialBlend;
+                var player = root.AddComponent<VoiceAnswerPlayer>();
+
+                var voiceAssistant = root.AddComponent<VoiceAssistantController>();
+                SetReferences(voiceAssistant,
+                    ("configuration", voiceConfiguration), ("messages", voiceMessages),
+                    ("station", controller), ("player", player));
+
+                var voiceControls = root.AddComponent<VoiceAssistantControls>();
+                SetReferences(voiceControls,
+                    ("assistant", voiceAssistant), ("talkButton", talk.interactable),
+                    ("talkLabel", talk.label), ("subtitleText", subtitleText));
+
                 var bootstrap = root.AddComponent(bootstrapType);
-                SetReferences(bootstrap, ("authenticationConfiguration", authenticationConfiguration), ("controller", controller));
+                SetReferences(bootstrap,
+                    ("authenticationConfiguration", authenticationConfiguration), ("controller", controller),
+                    ("voiceAssistant", voiceAssistant));
 
                 EnsureFolder(Path.GetDirectoryName(prefabPath)?.Replace('\\', '/'));
                 return PrefabUtility.SaveAsPrefabAsset(root, prefabPath, out var saved) && saved
