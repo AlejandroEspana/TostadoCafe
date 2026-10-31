@@ -85,6 +85,9 @@ namespace ToastedVr.RoastSimulation.Editor
                 var display = root.AddComponent<RoastStationDisplay>();
                 SetReferences(display, ("controller", controller), ("statusText", statusText), ("messageText", messageText));
 
+                var visualEvents = root.AddComponent<RoastStationVisualEvents>();
+                SetReferences(visualEvents, ("controller", controller));
+
                 var controls = root.AddComponent<RoastStationControls>();
                 SetReferences(controls,
                     ("controller", controller),
