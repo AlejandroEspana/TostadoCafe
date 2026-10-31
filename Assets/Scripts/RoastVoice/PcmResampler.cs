@@ -3,7 +3,8 @@ using System;
 namespace ToastedVr.RoastVoice
 {
     // El backend pide mono de 16 kHz y el micrófono del visor puede grabar a otra frecuencia o en estéreo.
-    // ponytail: interpolación lineal sin filtro antialiasing; basta para voz hacia el transcriptor, un filtro si se oye mal.
+    // Interpolación lineal sin filtro antialiasing: la voz humana queda por debajo de los 8 kHz que conserva 16 kHz,
+    // y la grabación solo la escucha el transcriptor.
     public static class PcmResampler
     {
         public static float[] ToMono(float[] interleaved, int channels)
