@@ -138,6 +138,12 @@ namespace ToastedVr.RoastVoice
                 yield break;
             }
 
+            // Si está sonando una alerta, la respuesta espera a que termine; su subtítulo ya se ve.
+            while (player.IsPlaying)
+            {
+                yield return null;
+            }
+
             player.Play(clip);
             SetState(VoiceAssistantState.Speaking);
             while (player.IsPlaying)
@@ -172,6 +178,9 @@ namespace ToastedVr.RoastVoice
 
             ShowSubtitle(result.Failure == RoastApiFailure.Unavailable ? messages.OfflineMessage : messages.UnexpectedErrorMessage);
         }
+
+        // Las alertas proactivas usan el mismo subtítulo de la estación.
+        public void ShowAlertSubtitle(string text) => ShowSubtitle(text);
 
         private void SetState(VoiceAssistantState state)
         {
