@@ -18,7 +18,8 @@ namespace ToastedVr.RoastSimulation.Tests
                 var property = new SerializedObject(behaviour).GetIterator();
                 while (property.NextVisible(true))
                 {
-                    if (property.propertyType == SerializedPropertyType.ObjectReference && property.name != "m_Script")
+                    // Los campos heredados de Unity y de XRI empiezan con m_ y son opcionales; solo se revisan los propios.
+                    if (property.propertyType == SerializedPropertyType.ObjectReference && !property.name.StartsWith("m_"))
                     {
                         Assert.IsNotNull(property.objectReferenceValue, $"{behaviour.GetType().Name}.{property.name} está vacío");
                     }
