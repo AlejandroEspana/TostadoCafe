@@ -23,6 +23,9 @@ namespace ToastedVr.RoastSimulation
         public bool IsRunning { get; private set; }
 
         public event Action<RoastState> StateReceived;
+
+        // Una vez por tick nuevo, en orden y sin repetir, antes de StateReceived.
+        public event Action<RoastState> TickReceived;
         public event Action<RoastApiResult<SimulationPoll>> PollFailed;
 
         // La generación se toma al llamar y no en el primer paso de la corrutina, para que un Stop inmediato también cuente.
@@ -48,9 +51,15 @@ namespace ToastedVr.RoastSimulation
 
                 if (result.IsSuccess)
                 {
+                    var known = Buffer.Ticks.Count;
                     if (Buffer.Append(result.Value.Ticks))
                     {
                         LogDiagnostic("Some ticks were older than what the server keeps; the curve has a gap.");
+                    }
+
+                    for (var index = known; index < Buffer.Ticks.Count && myGeneration == generation; index++)
+                    {
+                        TickReceived?.Invoke(Buffer.Ticks[index]);
                     }
 
                     StateReceived?.Invoke(result.Value.State);

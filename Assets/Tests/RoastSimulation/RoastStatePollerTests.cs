@@ -44,7 +44,10 @@ namespace ToastedVr.RoastSimulation.Tests
             {
                 var poller = CreatePoller(backend);
                 var phases = new List<string>();
+                var events = new List<string>();
                 poller.StateReceived += state => phases.Add(state.Phase);
+                poller.StateReceived += state => events.Add("state" + state.Tick);
+                poller.TickReceived += tick => events.Add("tick" + tick.Tick);
 
                 driver.Start(poller.Run(SimulationId, 0));
                 yield return driver.RunUntilDone();
@@ -54,6 +57,8 @@ namespace ToastedVr.RoastSimulation.Tests
                     backend.Requests.Select(r => r.Query));
                 CollectionAssert.AreEqual(new[] { "PREHEAT", "ROASTING", "ROASTING", "FINISHED" }, phases);
                 CollectionAssert.AreEqual(new[] { 1, 2, 3, 4, 5 }, poller.Buffer.Ticks.Select(t => t.Tick));
+                CollectionAssert.AreEqual(
+                    new[] { "tick1", "tick2", "tick3", "state3", "tick4", "state4", "state0", "tick5", "state5" }, events);
                 Assert.IsFalse(poller.IsRunning);
             }
         }
