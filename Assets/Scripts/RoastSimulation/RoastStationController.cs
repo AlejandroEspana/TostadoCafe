@@ -19,6 +19,7 @@ namespace ToastedVr.RoastSimulation
         private bool gasInFlight;
         private bool showingOfflineMessage;
         private bool sessionExpired;
+        private int messageVersion;
 
         public event Action Changed;
         public event Action<string> MessageChanged;
@@ -78,7 +79,7 @@ namespace ToastedVr.RoastSimulation
 
         public void Charge()
         {
-            if (IsReady && IsPowered && !IsBusy && RoastPhaseRules.CanCharge(Phase))
+            if (CanAttempt(RoastAction.Charge))
             {
                 StartCoroutine(RunCharge());
             }
@@ -86,7 +87,7 @@ namespace ToastedVr.RoastSimulation
 
         public void Discharge()
         {
-            if (IsReady && IsPowered && !IsBusy && RoastPhaseRules.CanDischarge(Phase))
+            if (CanAttempt(RoastAction.Discharge))
             {
                 StartCoroutine(RunDischarge());
             }
@@ -107,6 +108,35 @@ namespace ToastedVr.RoastSimulation
             poller?.Stop();
             SetMessage(messages.SessionExpiredMessage);
             Changed?.Invoke();
+        }
+
+        // Si la acción no vale en esta fase, el jugador ve por qué en vez de un botón que no responde.
+        private bool CanAttempt(RoastAction action)
+        {
+            if (!IsReady || IsBusy)
+            {
+                return false;
+            }
+
+            var rejection = RoastActionRejection.MessageFor(action, IsPowered, Phase, messages);
+            if (rejection == null)
+            {
+                return true;
+            }
+
+            SetMessage(rejection);
+            StartCoroutine(ClearMessageLater(messageVersion));
+            return false;
+        }
+
+        // Solo borra el rechazo si nadie mostró otro mensaje mientras tanto.
+        private IEnumerator ClearMessageLater(int version)
+        {
+            yield return new WaitForSecondsRealtime(configuration.RejectionMessageSeconds);
+            if (messageVersion == version)
+            {
+                ClearMessage();
+            }
         }
 
         private IEnumerator PowerOn()
@@ -272,6 +302,7 @@ namespace ToastedVr.RoastSimulation
         private void SetMessage(string message)
         {
             showingOfflineMessage = false;
+            messageVersion++;
             MessageChanged?.Invoke(message);
         }
 

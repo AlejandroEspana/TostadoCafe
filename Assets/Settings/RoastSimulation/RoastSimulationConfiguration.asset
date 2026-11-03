@@ -19,6 +19,7 @@ MonoBehaviour:
   dischargeMaxRetries: 3
   maxDischargeAlerts: 60
   maxAlertIdLength: 40
+  rejectionMessageSeconds: 3
   minGasPercent: 0
   maxGasPercent: 100
   gasStepPercent: 5

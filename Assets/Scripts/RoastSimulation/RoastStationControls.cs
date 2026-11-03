@@ -84,11 +84,12 @@ namespace ToastedVr.RoastSimulation
         private void Refresh()
         {
             var phase = controller.Phase;
-            var canAct = controller.IsReady && controller.IsPowered && !controller.IsBusy;
+            var canPress = controller.IsReady && !controller.IsBusy;
 
             powerButton.enabled = controller.IsReady && !controller.IsBusy;
-            chargeButton.enabled = canAct && RoastPhaseRules.CanCharge(phase);
-            dischargeButton.enabled = canAct && RoastPhaseRules.CanDischarge(phase);
+            // Activos aunque la fase no lo permita: el controlador explica el rechazo.
+            chargeButton.enabled = canPress;
+            dischargeButton.enabled = canPress;
             gasKnob.enabled = controller.IsReady && controller.IsPowered && RoastPhaseRules.CanChangeGas(phase);
 
             var texts = controller.Messages;

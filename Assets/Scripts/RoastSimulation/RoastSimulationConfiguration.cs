@@ -20,6 +20,10 @@ namespace ToastedVr.RoastSimulation
         [Tooltip("Same limit the backend validates in the trace (roast-trace.max-alert-id-length).")]
         [SerializeField, Min(1)] private int maxAlertIdLength;
 
+        [Header("Station messages")]
+        [Tooltip("Seconds a rejected charge or discharge stays on screen.")]
+        [SerializeField, Min(0.5f)] private float rejectionMessageSeconds;
+
         [Header("Gas knob")]
         [SerializeField] private int minGasPercent;
         [SerializeField] private int maxGasPercent;
@@ -40,6 +44,7 @@ namespace ToastedVr.RoastSimulation
         public int DischargeMaxRetries => dischargeMaxRetries;
         public int MaxDischargeAlerts => maxDischargeAlerts;
         public int MaxAlertIdLength => maxAlertIdLength;
+        public float RejectionMessageSeconds => rejectionMessageSeconds;
         public int MinGasPercent => minGasPercent;
         public int MaxGasPercent => maxGasPercent;
         public int GasStepPercent => gasStepPercent;
