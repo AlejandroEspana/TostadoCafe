@@ -79,6 +79,41 @@ MonoBehaviour:
   alreadyChargedMessage: "El café ya está cargado."
   roastFinishedMessage: "El tueste ya terminó. Apaga la estación para empezar otro."
   actionNotAvailableMessage: "Esa acción no se puede hacer en este momento del tueste."
+  resultTitle: "Calificación del tueste"
+  resultFinalScoreLabel: "Nota final"
+  resultScoreWithGradeFormat: "{0}% · {1}"
+  resultRulesScoreFormat: "Reglas del tueste ({0} %)"
+  resultRubricScoreFormat: "Tus decisiones según la IA ({0} %)"
+  resultPartScoreFormat: "{0}%"
+  resultDefectCapMessage: "El tueste quedó con un defecto, así que la nota final no pasa del tope."
+  resultCriteriaTitle: "Cómo calificó la IA tus decisiones"
+  resultCriterionLevelFormat: "{0}: nivel {1} de {2}."
+  resultNotApplicableFormat: "No aplicó en este tueste: {0}."
+  criterionNames:
+  - key: DRYING_GAS
+    text: "Gas en el secado"
+  - key: RISE_TO_FIRST_CRACK
+    text: "Subida hasta el first crack"
+  - key: GAS_AFTER_FIRST_CRACK
+    text: "Gas después del first crack"
+  - key: ALERT_REACTION
+    text: "Reacción a las alertas"
+  resultPendingMessage: "La IA está calificando tus decisiones. Mientras tanto vale la nota de las reglas."
+  resultSlowMessage: "La calificación de la IA está tardando. Revisa el detalle en el historial más tarde."
+  resultFailedMessage: "La calificación de la IA no estuvo disponible. Vale la nota de las reglas."
+  skipReasonMessages:
+  - key: NO_TRACE
+    text: "Este tueste no trae el registro de tus decisiones. Vale la nota de las reglas."
+  - key: INVALID_TRACE
+    text: "El registro de tus decisiones no cuadró con el tueste. Vale la nota de las reglas."
+  - key: AUTO_MODE
+    text: "En modo automático la IA no califica decisiones. Vale la nota de las reglas."
+  - key: NO_CRITERIA
+    text: "Ningún criterio de decisiones aplicó en este tueste. Vale la nota de las reglas."
+  resultLegacyMessage: "Tueste guardado antes de la calificación combinada: vale la nota de las reglas."
+  feedbackTitle: "Retroalimentación del maestro tostador"
+  feedbackLoadingMessage: "Generando retroalimentación..."
+  feedbackUnavailableMessage: "Retroalimentación no disponible por ahora."
   chartTitle: "Curva de temperatura en tiempo real"
   chartTitleFinal: "Curva de temperatura obtenida"
   chartAxisTitle: "Temperatura (°C)"

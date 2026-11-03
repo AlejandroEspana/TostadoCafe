@@ -73,6 +73,33 @@ namespace ToastedVr.RoastSimulation
         [SerializeField] private string roastFinishedMessage;
         [SerializeField] private string actionNotAvailableMessage;
 
+        [Header("Roast result")]
+        [SerializeField] private string resultTitle;
+        [SerializeField] private string resultFinalScoreLabel;
+        [Tooltip("{0} = final score, {1} = grade name.")]
+        [SerializeField] private string resultScoreWithGradeFormat;
+        [Tooltip("{0} = weight in percent.")]
+        [SerializeField] private string resultRulesScoreFormat;
+        [Tooltip("{0} = weight in percent.")]
+        [SerializeField] private string resultRubricScoreFormat;
+        [Tooltip("{0} = score of one part.")]
+        [SerializeField] private string resultPartScoreFormat;
+        [SerializeField] private string resultDefectCapMessage;
+        [SerializeField] private string resultCriteriaTitle;
+        [Tooltip("{0} = criterion name, {1} = level, {2} = max level.")]
+        [SerializeField] private string resultCriterionLevelFormat;
+        [Tooltip("{0} = criterion names separated by commas.")]
+        [SerializeField] private string resultNotApplicableFormat;
+        [SerializeField] private KeyedText[] criterionNames;
+        [SerializeField] private string resultPendingMessage;
+        [SerializeField] private string resultSlowMessage;
+        [SerializeField] private string resultFailedMessage;
+        [SerializeField] private KeyedText[] skipReasonMessages;
+        [SerializeField] private string resultLegacyMessage;
+        [SerializeField] private string feedbackTitle;
+        [SerializeField] private string feedbackLoadingMessage;
+        [SerializeField] private string feedbackUnavailableMessage;
+
         [Header("Temperature chart")]
         [SerializeField] private string chartTitle;
         [SerializeField] private string chartTitleFinal;
@@ -114,6 +141,23 @@ namespace ToastedVr.RoastSimulation
         public string AlreadyChargedMessage => alreadyChargedMessage;
         public string RoastFinishedMessage => roastFinishedMessage;
         public string ActionNotAvailableMessage => actionNotAvailableMessage;
+        public string ResultTitle => resultTitle;
+        public string ResultFinalScoreLabel => resultFinalScoreLabel;
+        public string ResultScoreWithGradeFormat => resultScoreWithGradeFormat;
+        public string ResultRulesScoreFormat => resultRulesScoreFormat;
+        public string ResultRubricScoreFormat => resultRubricScoreFormat;
+        public string ResultPartScoreFormat => resultPartScoreFormat;
+        public string ResultDefectCapMessage => resultDefectCapMessage;
+        public string ResultCriteriaTitle => resultCriteriaTitle;
+        public string ResultCriterionLevelFormat => resultCriterionLevelFormat;
+        public string ResultNotApplicableFormat => resultNotApplicableFormat;
+        public string ResultPendingMessage => resultPendingMessage;
+        public string ResultSlowMessage => resultSlowMessage;
+        public string ResultFailedMessage => resultFailedMessage;
+        public string ResultLegacyMessage => resultLegacyMessage;
+        public string FeedbackTitle => feedbackTitle;
+        public string FeedbackLoadingMessage => feedbackLoadingMessage;
+        public string FeedbackUnavailableMessage => feedbackUnavailableMessage;
         public string ChartTitle => chartTitle;
         public string ChartTitleFinal => chartTitleFinal;
         public string ChartAxisTitle => chartAxisTitle;
@@ -122,6 +166,14 @@ namespace ToastedVr.RoastSimulation
         public string PhaseName(string phase) => Lookup(phaseNames, phase);
         public string GrainStateName(string grainState) => Lookup(grainStateNames, grainState);
         public string GradeName(string grade) => Lookup(gradeNames, grade);
+        public string CriterionName(string criterion) => Lookup(criterionNames, criterion);
+
+        // Igual que la web: una razón desconocida cae en el mensaje de calificación no disponible.
+        public string SkipReasonMessage(string skipReason)
+        {
+            var text = Lookup(skipReasonMessages, skipReason);
+            return text == (skipReason ?? string.Empty) ? resultFailedMessage : text;
+        }
 
         // Si el backend agrega un valor nuevo, se muestra tal cual en vez de dejar el texto vacío.
         private static string Lookup(KeyedText[] texts, string key)

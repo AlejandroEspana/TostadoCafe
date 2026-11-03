@@ -76,6 +76,12 @@ namespace ToastedVr.RoastSimulation.Tests
                 string.Format(messages.SecondCrackFormat, "x");
                 string.Format(messages.ScoreFormat, 80, "x");
                 string.Format(messages.ChartTickFormat, 198);
+                string.Format(messages.ResultScoreWithGradeFormat, 77, "x");
+                string.Format(messages.ResultRulesScoreFormat, 70);
+                string.Format(messages.ResultRubricScoreFormat, 30);
+                string.Format(messages.ResultPartScoreFormat, 70.5);
+                string.Format(messages.ResultCriterionLevelFormat, "x", 2, 3);
+                string.Format(messages.ResultNotApplicableFormat, "x");
             });
         }
 
@@ -109,6 +115,47 @@ namespace ToastedVr.RoastSimulation.Tests
             Assert.AreNotEqual(grade, Messages().GradeName(grade));
         }
 
+        [TestCase("DRYING_GAS")]
+        [TestCase("RISE_TO_FIRST_CRACK")]
+        [TestCase("GAS_AFTER_FIRST_CRACK")]
+        [TestCase("ALERT_REACTION")]
+        public void EveryCriterionHasAName(string criterion)
+        {
+            Assert.AreNotEqual(criterion, Messages().CriterionName(criterion));
+        }
+
+        [TestCase("NO_TRACE")]
+        [TestCase("INVALID_TRACE")]
+        [TestCase("AUTO_MODE")]
+        [TestCase("NO_CRITERIA")]
+        public void EverySkipReasonHasItsOwnMessage(string skipReason)
+        {
+            var messages = Messages();
+
+            Assert.AreNotEqual(skipReason, messages.SkipReasonMessage(skipReason));
+            Assert.AreNotEqual(messages.ResultFailedMessage, messages.SkipReasonMessage(skipReason));
+        }
+
+        [TestCase("NEW_REASON")]
+        [TestCase(null)]
+        public void UnknownSkipReasonFallsBackToTheFailedMessage(string skipReason)
+        {
+            var messages = Messages();
+
+            Assert.AreEqual(messages.ResultFailedMessage, messages.SkipReasonMessage(skipReason));
+        }
+
+        [Test]
+        public void ResultTextsMatchTheWeb()
+        {
+            var messages = Messages();
+
+            Assert.AreEqual("Calificación del tueste", messages.ResultTitle);
+            Assert.AreEqual("77% · Buena", string.Format(messages.ResultScoreWithGradeFormat, 77, messages.GradeName("GOOD")));
+            Assert.AreEqual("Gas en el secado: nivel 2 de 3.",
+                string.Format(messages.ResultCriterionLevelFormat, messages.CriterionName("DRYING_GAS"), 2, 3));
+        }
+
         [Test]
         public void UnknownKeysAreShownAsIs()
         {
@@ -129,7 +176,11 @@ namespace ToastedVr.RoastSimulation.Tests
                 messages.BakedAlarm, messages.BurnWarningAlarm, messages.AlarmLimitExceededAlarm, messages.ChargeOvershootAlarm,
                 messages.ChartTitle, messages.ChartTitleFinal, messages.ChartAxisTitle, messages.PowerOnFirstMessage,
                 messages.NotChargedYetMessage, messages.WaitForChargeDipMessage, messages.AlreadyChargedMessage,
-                messages.RoastFinishedMessage, messages.ActionNotAvailableMessage
+                messages.RoastFinishedMessage, messages.ActionNotAvailableMessage, messages.ResultTitle,
+                messages.ResultFinalScoreLabel, messages.ResultDefectCapMessage, messages.ResultCriteriaTitle,
+                messages.ResultPendingMessage, messages.ResultSlowMessage, messages.ResultFailedMessage,
+                messages.ResultLegacyMessage, messages.FeedbackTitle, messages.FeedbackLoadingMessage,
+                messages.FeedbackUnavailableMessage
             })
             {
                 Assert.IsFalse(string.IsNullOrWhiteSpace(text));
