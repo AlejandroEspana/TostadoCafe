@@ -20,6 +20,8 @@ namespace ToastedVr.RoastSimulation.Editor
         private const string VoiceConfigurationPath = "Assets/Settings/RoastVoice/RoastVoiceConfiguration.asset";
         private const string VoiceMessagesPath = "Assets/Settings/RoastVoice/RoastVoiceMessages.asset";
         private const string AlertsConfigurationPath = "Assets/Settings/RoastAlerts/RoastAlertsConfiguration.asset";
+        private const string ChartConfigurationPath = "Assets/Settings/RoastSimulation/TemperatureChartConfiguration.asset";
+        private const string ChartMaterialPath = "Assets/Materials/RoastStation/TemperatureChartLine.mat";
 
         // El bootstrap vive en Assembly-CSharp porque usa el login; este asmdef de editor no puede referenciarlo.
         private const string BootstrapTypeName = "ToastedVr.RoastSimulationBootstrap.RoastStationBootstrap, Assembly-CSharp";
@@ -45,6 +47,8 @@ namespace ToastedVr.RoastSimulation.Editor
         private static readonly Vector3 KnobBodyScale = new Vector3(0.07f, 0.015f, 0.07f);
         private static readonly Vector3 KnobPointerScale = new Vector3(0.01f, 0.01f, 0.03f);
         private static readonly Vector3 KnobPointerOffset = new Vector3(0f, 0.016f, 0.022f);
+        // La gráfica va a la derecha del tablero y a su altura, para no mirar hacia arriba en VR.
+        private const float ChartGap = 0.05f;
 
         [MenuItem("Tools/Toasted VR/Generar RoastStation")]
         public static void Generate()
@@ -61,6 +65,8 @@ namespace ToastedVr.RoastSimulation.Editor
             var voiceConfiguration = LoadRequired<RoastVoiceConfiguration>(VoiceConfigurationPath);
             var voiceMessages = LoadRequired<RoastVoiceMessages>(VoiceMessagesPath);
             var alertsConfiguration = LoadRequired<RoastAlertsConfiguration>(AlertsConfigurationPath);
+            var chartConfiguration = LoadRequired<TemperatureChartConfiguration>(ChartConfigurationPath);
+            var chartMaterial = LoadRequired<Material>(ChartMaterialPath);
             var authenticationConfiguration = FindSingleAsset(AuthenticationConfigurationType);
             var bootstrapType = Type.GetType(BootstrapTypeName)
                 ?? throw new InvalidOperationException($"{BootstrapTypeName} was not found.");
@@ -121,6 +127,8 @@ namespace ToastedVr.RoastSimulation.Editor
                     ("authenticationConfiguration", authenticationConfiguration), ("controller", controller),
                     ("voiceAssistant", voiceAssistant), ("alerts", alerts));
 
+                CreateTemperatureChart(root.transform, controller, chartConfiguration, chartMaterial);
+
                 EnsureFolder(Path.GetDirectoryName(prefabPath)?.Replace('\\', '/'));
                 return PrefabUtility.SaveAsPrefabAsset(root, prefabPath, out var saved) && saved
                     ? AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath)
@@ -157,6 +165,65 @@ namespace ToastedVr.RoastSimulation.Editor
             SetReferences(interactable, ("knobVisual", visual));
             var label = CreateText("GasKnobLabel", parent, new Vector3(column, LabelsHeight, 0f), LabelSize, LabelFontSize, TextAlignmentOptions.Center);
             return (interactable, label);
+        }
+
+        // Pieza nueva aparte: no cambia nada de las piezas que ya existían en el prefab.
+        private static void CreateTemperatureChart(Transform parent, RoastStationController controller,
+            TemperatureChartConfiguration configuration, Material material)
+        {
+            var chartObject = new GameObject("TemperatureChart");
+            chartObject.transform.SetParent(parent, false);
+            chartObject.transform.localPosition = new Vector3(
+                BoardCenter.x + BoardSize.x / 2f + ChartGap + configuration.PanelWidth / 2f, BoardCenter.y, 0f);
+
+            var content = new GameObject("ChartContent").transform;
+            content.SetParent(chartObject.transform, false);
+
+            var background = CreatePrimitive("ChartBackground", PrimitiveType.Quad, content, Vector3.zero,
+                new Vector3(configuration.PanelWidth, configuration.PanelHeight, 1f));
+            UnityEngine.Object.DestroyImmediate(background.GetComponent<Collider>());
+            var backgroundRenderer = background.GetComponent<MeshRenderer>();
+            PrepareChartRenderer(backgroundRenderer, material);
+
+            var spacing = configuration.LayerSpacing;
+            var grid = CreateChartLayer("ChartGrid", content, -spacing, material);
+            var baseline = CreateChartLayer("ChartBaseline", content, -spacing, material);
+            var floorReference = CreateChartLayer("ChartFloorReference", content, -2f * spacing, material);
+            var targetReference = CreateChartLayer("ChartTargetReference", content, -3f * spacing, material);
+            var curve = CreateChartLayer("ChartCurve", content, -4f * spacing, material);
+
+            var textDepth = -5f * spacing;
+            var title = CreateText("ChartTitle", content, new Vector3(0f, configuration.PlotHeight / 2f, textDepth),
+                new Vector2(configuration.PanelWidth, configuration.TitleHeight), configuration.TitleFontSize, TextAlignmentOptions.Center);
+            var axisTitle = CreateText("ChartAxisTitle", content, new Vector3(0f, 0f, textDepth),
+                new Vector2(configuration.PlotHeight, configuration.TickLabelSize.y), configuration.LabelFontSize, TextAlignmentOptions.Center);
+            axisTitle.rectTransform.localRotation = Quaternion.Euler(0f, 0f, 90f);
+            var tickLabel = CreateText("ChartTickLabel", content, new Vector3(0f, 0f, textDepth),
+                configuration.TickLabelSize, configuration.LabelFontSize, TextAlignmentOptions.Right);
+            tickLabel.gameObject.SetActive(false);
+
+            var chart = chartObject.AddComponent<TemperatureChart>();
+            SetReferences(chart,
+                ("controller", controller), ("configuration", configuration), ("content", content.gameObject),
+                ("background", backgroundRenderer), ("grid", grid), ("floorReference", floorReference),
+                ("targetReference", targetReference), ("curve", curve), ("baseline", baseline),
+                ("title", title), ("axisTitle", axisTitle), ("tickLabelTemplate", tickLabel));
+        }
+
+        private static MeshFilter CreateChartLayer(string name, Transform parent, float depth, Material material)
+        {
+            var layer = new GameObject(name, typeof(MeshFilter), typeof(MeshRenderer));
+            layer.transform.SetParent(parent, false);
+            layer.transform.localPosition = new Vector3(0f, 0f, depth);
+            PrepareChartRenderer(layer.GetComponent<MeshRenderer>(), material);
+            return layer.GetComponent<MeshFilter>();
+        }
+
+        private static void PrepareChartRenderer(MeshRenderer renderer, Material material)
+        {
+            renderer.sharedMaterial = material;
+            renderer.shadowCastingMode = ShadowCastingMode.Off;
+            renderer.receiveShadows = false;
         }
 
         private static GameObject CreatePrimitive(string name, PrimitiveType type, Transform parent, Vector3 localPosition, Vector3 localScale)

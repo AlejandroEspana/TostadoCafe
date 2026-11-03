@@ -73,3 +73,7 @@ MonoBehaviour:
   dischargingMessage: "Descargando..."
   evaluationPendingMessage: "La calificación de tus decisiones está en proceso."
   unexpectedErrorMessage: "No pude completar la acción. Inténtalo de nuevo."
+  chartTitle: "Curva de temperatura en tiempo real"
+  chartTitleFinal: "Curva de temperatura obtenida"
+  chartAxisTitle: "Temperatura (°C)"
+  chartTickFormat: "{0:0}"

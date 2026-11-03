@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using ToastedVr.RoastSimulation.Editor;
 using UnityEditor;
+using UnityEngine;
 
 namespace ToastedVr.RoastSimulation.Tests
 {
@@ -33,6 +34,25 @@ namespace ToastedVr.RoastSimulation.Tests
 
             Assert.AreEqual(guid, AssetDatabase.AssetPathToGUID(TemporaryPrefab));
             RoastStationPrefabAssertions.AssertFullyWired(rebuilt);
+        }
+
+        [Test]
+        public void PlacesTheTemperatureChartBesideTheBoard()
+        {
+            var prefab = RoastStationPrefabGenerator.Build(TemporaryPrefab);
+            var configuration = AssetDatabase.LoadAssetAtPath<TemperatureChartConfiguration>(
+                "Assets/Settings/RoastSimulation/TemperatureChartConfiguration.asset");
+
+            var chart = prefab.transform.Find("TemperatureChart");
+            var board = prefab.transform.Find("Board");
+
+            Assert.IsNotNull(chart);
+            Assert.AreEqual(1, prefab.GetComponentsInChildren<TemperatureChart>(true).Length);
+            Assert.IsNotNull(chart.GetComponent<TemperatureChart>());
+            Assert.Greater(chart.localPosition.x - configuration.PanelWidth / 2f, board.localPosition.x + board.localScale.x / 2f);
+            Assert.AreEqual(board.localPosition.y, chart.localPosition.y, 1e-6);
+            Assert.IsNull(chart.GetComponentInChildren<Collider>(true), "la gráfica no debe tapar los rayos de los botones");
+            Assert.IsFalse(chart.Find("ChartContent/ChartTickLabel").gameObject.activeSelf);
         }
     }
 }

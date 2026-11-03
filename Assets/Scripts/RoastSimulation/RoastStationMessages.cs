@@ -65,6 +65,13 @@ namespace ToastedVr.RoastSimulation
         [SerializeField] private string evaluationPendingMessage;
         [SerializeField] private string unexpectedErrorMessage;
 
+        [Header("Temperature chart")]
+        [SerializeField] private string chartTitle;
+        [SerializeField] private string chartTitleFinal;
+        [SerializeField] private string chartAxisTitle;
+        [Tooltip("{0} = temperature in °C of an axis mark.")]
+        [SerializeField] private string chartTickFormat;
+
         public string PowerOnLabel => powerOnLabel;
         public string PowerOffLabel => powerOffLabel;
         public string ChargeLabel => chargeLabel;
@@ -93,6 +100,10 @@ namespace ToastedVr.RoastSimulation
         public string DischargingMessage => dischargingMessage;
         public string EvaluationPendingMessage => evaluationPendingMessage;
         public string UnexpectedErrorMessage => unexpectedErrorMessage;
+        public string ChartTitle => chartTitle;
+        public string ChartTitleFinal => chartTitleFinal;
+        public string ChartAxisTitle => chartAxisTitle;
+        public string ChartTickFormat => chartTickFormat;
 
         public string PhaseName(string phase) => Lookup(phaseNames, phase);
         public string GrainStateName(string grainState) => Lookup(grainStateNames, grainState);
