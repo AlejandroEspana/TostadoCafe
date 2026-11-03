@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using ToastedVr.SessionRefresh;
 using UnityEngine;
 
@@ -35,6 +36,9 @@ namespace ToastedVr.RoastSimulation
         public bool IsReady => client != null && client.IsConfigured && !sessionExpired;
         public bool IsPowered => SimulationId != null;
         public string Phase => State?.Phase;
+
+        // Ticks guardados del tueste actual, en orden, para la curva. Siguen ahí después de descargar.
+        public IReadOnlyList<RoastState> Ticks => poller != null ? poller.Buffer.Ticks : Array.Empty<RoastState>();
 
         public void Initialize(string backendBaseUrl, AuthorizedRequestSender sender)
         {
