@@ -65,6 +65,14 @@ namespace ToastedVr.RoastSimulation
         [SerializeField] private string evaluationPendingMessage;
         [SerializeField] private string unexpectedErrorMessage;
 
+        [Header("Rejected actions")]
+        [SerializeField] private string powerOnFirstMessage;
+        [SerializeField] private string notChargedYetMessage;
+        [SerializeField] private string waitForChargeDipMessage;
+        [SerializeField] private string alreadyChargedMessage;
+        [SerializeField] private string roastFinishedMessage;
+        [SerializeField] private string actionNotAvailableMessage;
+
         [Header("Temperature chart")]
         [SerializeField] private string chartTitle;
         [SerializeField] private string chartTitleFinal;
@@ -100,6 +108,12 @@ namespace ToastedVr.RoastSimulation
         public string DischargingMessage => dischargingMessage;
         public string EvaluationPendingMessage => evaluationPendingMessage;
         public string UnexpectedErrorMessage => unexpectedErrorMessage;
+        public string PowerOnFirstMessage => powerOnFirstMessage;
+        public string NotChargedYetMessage => notChargedYetMessage;
+        public string WaitForChargeDipMessage => waitForChargeDipMessage;
+        public string AlreadyChargedMessage => alreadyChargedMessage;
+        public string RoastFinishedMessage => roastFinishedMessage;
+        public string ActionNotAvailableMessage => actionNotAvailableMessage;
         public string ChartTitle => chartTitle;
         public string ChartTitleFinal => chartTitleFinal;
         public string ChartAxisTitle => chartAxisTitle;

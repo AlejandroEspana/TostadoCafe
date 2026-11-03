@@ -121,7 +121,9 @@ namespace ToastedVr.RoastSimulation.Tests
                 messages.SessionExpiredMessage, messages.SimulationLostMessage, messages.DischargingMessage,
                 messages.EvaluationPendingMessage, messages.UnexpectedErrorMessage, messages.BurnedAlarm,
                 messages.BakedAlarm, messages.BurnWarningAlarm, messages.AlarmLimitExceededAlarm, messages.ChargeOvershootAlarm,
-                messages.ChartTitle, messages.ChartTitleFinal, messages.ChartAxisTitle
+                messages.ChartTitle, messages.ChartTitleFinal, messages.ChartAxisTitle, messages.PowerOnFirstMessage,
+                messages.NotChargedYetMessage, messages.WaitForChargeDipMessage, messages.AlreadyChargedMessage,
+                messages.RoastFinishedMessage, messages.ActionNotAvailableMessage
             })
             {
                 Assert.IsFalse(string.IsNullOrWhiteSpace(text));
