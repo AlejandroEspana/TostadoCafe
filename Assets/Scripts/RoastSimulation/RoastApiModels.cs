@@ -85,9 +85,33 @@ namespace ToastedVr.RoastSimulation
         public RoastEvaluationSummary Evaluation { get; set; }
     }
 
+    // Calificación combinada (GET /api/v1/roasting/sessions/{id}). FinalScore es null mientras está PENDING
+    // o si quedó FAILED; RubricScore y los pesos solo llegan cuando la IA calificó (COMPLETED).
     public sealed class RoastEvaluationSummary
     {
         public string Status { get; set; }
+        public string SkipReason { get; set; }
+        public int? FinalScore { get; set; }
+        public int? RulesScore { get; set; }
+        public double? RubricScore { get; set; }
+        public double? RulesWeight { get; set; }
+        public double? AiWeight { get; set; }
+        public bool DefectCapApplied { get; set; }
+        public List<RoastCriterionScore> Criteria { get; set; } = new List<RoastCriterionScore>();
+        public List<string> NotApplicable { get; set; } = new List<string>();
+    }
+
+    public sealed class RoastCriterionScore
+    {
+        public string Id { get; set; }
+        public int Level { get; set; }
+        public int MaxLevel { get; set; }
+        public string Justification { get; set; }
+    }
+
+    public sealed class RoastFeedback
+    {
+        public string Feedback { get; set; }
     }
 
     public sealed class ApiError

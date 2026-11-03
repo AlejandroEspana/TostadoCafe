@@ -65,6 +65,69 @@ namespace ToastedVr.RoastSimulation.Tests
         }
 
         [Test]
+        public void ReadsCompletedEvaluation()
+        {
+            var session = RoastJson.TryDeserialize<RoastSessionSummary>(
+                "{\"id\": 42, \"result\": \"PERFECT\", \"qualityScore\": 80, \"finalScore\": 77, \"grade\": \"GOOD\"," +
+                "\"evaluation\": {\"status\": \"COMPLETED\", \"skipReason\": null, \"finalScore\": 77, \"rulesScore\": 80," +
+                "\"rubricScore\": 70.5, \"rulesWeight\": 0.7, \"aiWeight\": 0.3, \"defectCapApplied\": true," +
+                "\"rubricVersion\": \"draft-2026-10-30\", \"model\": \"gpt-oss-120b\"," +
+                "\"criteria\": [{\"id\": \"DRYING_GAS\", \"level\": 2, \"maxLevel\": 3, \"justification\": \"Subiste el gas a tiempo.\"}]," +
+                "\"notApplicable\": [\"ALERT_REACTION\"]}}");
+
+            var evaluation = session.Evaluation;
+            Assert.AreEqual(80, session.QualityScore);
+            Assert.AreEqual("COMPLETED", evaluation.Status);
+            Assert.IsNull(evaluation.SkipReason);
+            Assert.AreEqual(77, evaluation.FinalScore);
+            Assert.AreEqual(80, evaluation.RulesScore);
+            Assert.AreEqual(70.5, evaluation.RubricScore.Value, 1e-9);
+            Assert.AreEqual(0.7, evaluation.RulesWeight.Value, 1e-9);
+            Assert.AreEqual(0.3, evaluation.AiWeight.Value, 1e-9);
+            Assert.IsTrue(evaluation.DefectCapApplied);
+            Assert.AreEqual(1, evaluation.Criteria.Count);
+            Assert.AreEqual("DRYING_GAS", evaluation.Criteria[0].Id);
+            Assert.AreEqual(2, evaluation.Criteria[0].Level);
+            Assert.AreEqual(3, evaluation.Criteria[0].MaxLevel);
+            Assert.AreEqual("Subiste el gas a tiempo.", evaluation.Criteria[0].Justification);
+            CollectionAssert.AreEqual(new[] { "ALERT_REACTION" }, evaluation.NotApplicable);
+        }
+
+        [Test]
+        public void ReadsSkippedEvaluationWithNullLists()
+        {
+            var evaluation = RoastJson.TryDeserialize<RoastEvaluationSummary>(
+                "{\"status\": \"NOT_APPLICABLE\", \"skipReason\": \"AUTO_MODE\", \"finalScore\": null, \"rulesScore\": 64," +
+                "\"rubricScore\": null, \"rulesWeight\": null, \"aiWeight\": null, \"defectCapApplied\": null," +
+                "\"criteria\": null, \"notApplicable\": null}");
+
+            Assert.AreEqual("AUTO_MODE", evaluation.SkipReason);
+            Assert.IsNull(evaluation.FinalScore);
+            Assert.IsNull(evaluation.RubricScore);
+            Assert.IsFalse(evaluation.DefectCapApplied);
+            Assert.IsNotNull(evaluation.Criteria);
+            Assert.IsNotNull(evaluation.NotApplicable);
+        }
+
+        [Test]
+        public void ReadsSessionSavedBeforeTheCombinedScore()
+        {
+            var session = RoastJson.TryDeserialize<RoastSessionSummary>(
+                "{\"id\": 7, \"qualityScore\": 55, \"finalScore\": 55, \"grade\": \"FAIR\", \"evaluation\": null}");
+
+            Assert.IsNull(session.Evaluation);
+            Assert.AreEqual(55, session.FinalScore);
+        }
+
+        [Test]
+        public void ReadsFeedback()
+        {
+            var feedback = RoastJson.TryDeserialize<RoastFeedback>("{\"feedback\": \"Buen control del gas.\"}");
+
+            Assert.AreEqual("Buen control del gas.", feedback.Feedback);
+        }
+
+        [Test]
         public void ReadsBackendError()
         {
             var error = RoastJson.TryDeserialize<ApiError>(
