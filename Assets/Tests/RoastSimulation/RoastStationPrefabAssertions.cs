@@ -37,6 +37,7 @@ namespace ToastedVr.RoastSimulation.Tests
             AssertCount(behaviours, "VoiceAnswerPlayer", 1);
             AssertCount(behaviours, "RoastAlertsController", 1);
             AssertCount(behaviours, "RoastStationVisualEvents", 1);
+            AssertCount(behaviours, "TemperatureChart", 1);
             Assert.IsNotNull(prefab.GetComponent<AudioSource>(), "falta el AudioSource de la voz");
         }
 
