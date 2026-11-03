@@ -20,6 +20,8 @@ namespace ToastedVr.RoastVoice.Tests
             Assert.AreEqual(15f, configuration.MaxRecordingSeconds, 1e-6);
             Assert.AreEqual(600000, configuration.MaxAudioBytes);
             Assert.GreaterOrEqual(configuration.RequestTimeoutSeconds, 30, "el backend espera hasta 30 s a la IA");
+            Assert.AreEqual("/api/v1/roasting/sessions/42/feedback/speech", string.Format(configuration.FeedbackSpeechPathFormat, 42));
+            Assert.Greater(configuration.FeedbackSpeechTimeoutSeconds, 30, "el backend espera hasta 30 s la voz");
         }
 
         [Test]

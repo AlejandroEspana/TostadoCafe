@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier:
   questionsPath: /api/v1/roasting/assistant/questions
   requestTimeoutSeconds: 35
+  feedbackSpeechPathFormat: /api/v1/roasting/sessions/{0}/feedback/speech
+  feedbackSpeechTimeoutSeconds: 45
   sampleRateHz: 16000
   minRecordingSeconds: 0.3
   maxRecordingSeconds: 15

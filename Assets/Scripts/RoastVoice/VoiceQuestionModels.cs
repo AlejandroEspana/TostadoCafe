@@ -41,6 +41,13 @@ namespace ToastedVr.RoastVoice
         public string Title { get; set; }
     }
 
+    // Respuesta de POST /api/v1/roasting/sessions/{id}/feedback/speech.
+    public sealed class FeedbackSpeech
+    {
+        public VoiceAudio Audio { get; set; }
+        public string Provider { get; set; }
+    }
+
     public sealed class VoiceAudio
     {
         public string Format { get; set; }

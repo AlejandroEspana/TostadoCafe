@@ -48,11 +48,17 @@ namespace ToastedVr.RoastSimulation
         public RoastSessionSummary LastSession { get; private set; }
         public bool EvaluationTimedOut { get; private set; }
 
+        // Para las piezas que piden al backend con el mismo token, como la voz de la retroalimentación.
+        public string BackendBaseUrl { get; private set; }
+        public AuthorizedRequestSender Sender { get; private set; }
+
         // Ticks guardados del tueste actual, en orden, para la curva. Siguen ahí después de descargar.
         public IReadOnlyList<RoastState> Ticks => poller != null ? poller.Buffer.Ticks : Array.Empty<RoastState>();
 
         public void Initialize(string backendBaseUrl, AuthorizedRequestSender sender)
         {
+            BackendBaseUrl = backendBaseUrl;
+            Sender = sender;
             client = new RoastSimulationApiClient(backendBaseUrl, configuration.SimulationsPath, configuration.RequestTimeoutSeconds, sender);
             poller = new RoastStatePoller(client, configuration.PollIntervalSeconds);
             poller.StateReceived += OnPolledState;
