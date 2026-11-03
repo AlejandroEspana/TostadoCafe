@@ -52,7 +52,11 @@ namespace ToastedVr.RoastSimulation
             controller.Changed -= Refresh;
         }
 
-        private void OnPowerPressed(SelectEnterEventArgs args) => controller.TogglePower();
+        private void OnPowerPressed(SelectEnterEventArgs args)
+        {
+            Debug.Log("[RoastSimulation] Power button selected");
+            controller.TogglePower();
+        }
 
         private void OnChargePressed(SelectEnterEventArgs args) => controller.Charge();
 
