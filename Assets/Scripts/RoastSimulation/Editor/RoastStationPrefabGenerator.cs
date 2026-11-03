@@ -22,6 +22,7 @@ namespace ToastedVr.RoastSimulation.Editor
         private const string AlertsConfigurationPath = "Assets/Settings/RoastAlerts/RoastAlertsConfiguration.asset";
         private const string ChartConfigurationPath = "Assets/Settings/RoastSimulation/TemperatureChartConfiguration.asset";
         private const string ChartMaterialPath = "Assets/Materials/RoastStation/TemperatureChartLine.mat";
+        private const string ResultPanelConfigurationPath = "Assets/Settings/RoastSimulation/RoastResultPanelConfiguration.asset";
 
         // El bootstrap vive en Assembly-CSharp porque usa el login; este asmdef de editor no puede referenciarlo.
         private const string BootstrapTypeName = "ToastedVr.RoastSimulationBootstrap.RoastStationBootstrap, Assembly-CSharp";
@@ -67,6 +68,7 @@ namespace ToastedVr.RoastSimulation.Editor
             var alertsConfiguration = LoadRequired<RoastAlertsConfiguration>(AlertsConfigurationPath);
             var chartConfiguration = LoadRequired<TemperatureChartConfiguration>(ChartConfigurationPath);
             var chartMaterial = LoadRequired<Material>(ChartMaterialPath);
+            var resultPanelConfiguration = LoadRequired<RoastResultPanelConfiguration>(ResultPanelConfigurationPath);
             var authenticationConfiguration = FindSingleAsset(AuthenticationConfigurationType);
             var bootstrapType = Type.GetType(BootstrapTypeName)
                 ?? throw new InvalidOperationException($"{BootstrapTypeName} was not found.");
@@ -128,6 +130,8 @@ namespace ToastedVr.RoastSimulation.Editor
                     ("voiceAssistant", voiceAssistant), ("alerts", alerts));
 
                 CreateTemperatureChart(root.transform, controller, chartConfiguration, chartMaterial);
+                CreateResultPanel(root.transform, controller, resultPanelConfiguration, chartConfiguration, chartMaterial,
+                    voiceConfiguration, voiceAssistant, player);
 
                 EnsureFolder(Path.GetDirectoryName(prefabPath)?.Replace('\\', '/'));
                 return PrefabUtility.SaveAsPrefabAsset(root, prefabPath, out var saved) && saved
@@ -208,6 +212,46 @@ namespace ToastedVr.RoastSimulation.Editor
                 ("background", backgroundRenderer), ("grid", grid), ("floorReference", floorReference),
                 ("targetReference", targetReference), ("curve", curve), ("baseline", baseline),
                 ("title", title), ("axisTitle", axisTitle), ("tickLabelTemplate", tickLabel));
+        }
+
+        // Pieza nueva aparte, a la izquierda del tablero como la gráfica a la derecha; lleva también la voz del resultado.
+        private static void CreateResultPanel(Transform parent, RoastStationController controller, RoastResultPanelConfiguration configuration,
+            TemperatureChartConfiguration style, Material material, RoastVoiceConfiguration voiceConfiguration,
+            VoiceAssistantController voiceAssistant, VoiceAnswerPlayer player)
+        {
+            var panelObject = new GameObject("RoastResultPanel");
+            panelObject.transform.SetParent(parent, false);
+            panelObject.transform.localPosition = new Vector3(
+                BoardCenter.x - BoardSize.x / 2f - configuration.Gap - configuration.PanelWidth / 2f, BoardCenter.y, 0f);
+
+            var content = new GameObject("ResultContent").transform;
+            content.SetParent(panelObject.transform, false);
+
+            var background = CreatePrimitive("ResultBackground", PrimitiveType.Quad, content, Vector3.zero,
+                new Vector3(configuration.PanelWidth, configuration.PanelHeight, 1f));
+            UnityEngine.Object.DestroyImmediate(background.GetComponent<Collider>());
+            var backgroundRenderer = background.GetComponent<MeshRenderer>();
+            PrepareChartRenderer(backgroundRenderer, material);
+
+            var textDepth = -configuration.LayerSpacing;
+            var innerWidth = configuration.PanelWidth - 2f * configuration.Padding;
+            var top = configuration.PanelHeight / 2f - configuration.Padding;
+            var bodyTop = top - configuration.TitleHeight;
+            var bodyBottom = -configuration.PanelHeight / 2f + configuration.Padding;
+            var title = CreateText("ResultTitle", content, new Vector3(0f, top - configuration.TitleHeight / 2f, textDepth),
+                new Vector2(innerWidth, configuration.TitleHeight), style.TitleFontSize, TextAlignmentOptions.Center);
+            var body = CreateText("ResultBody", content, new Vector3(0f, (bodyTop + bodyBottom) / 2f, textDepth),
+                new Vector2(innerWidth, bodyTop - bodyBottom), configuration.BodyFontSizeMax, TextAlignmentOptions.TopLeft);
+
+            var panel = panelObject.AddComponent<RoastResultPanel>();
+            SetReferences(panel,
+                ("controller", controller), ("style", style), ("configuration", configuration), ("content", content.gameObject),
+                ("background", backgroundRenderer), ("title", title), ("body", body));
+
+            var speech = panelObject.AddComponent<FeedbackSpeechPlayer>();
+            SetReferences(speech,
+                ("configuration", voiceConfiguration), ("station", controller),
+                ("voiceAssistant", voiceAssistant), ("player", player));
         }
 
         private static MeshFilter CreateChartLayer(string name, Transform parent, float depth, Material material)
