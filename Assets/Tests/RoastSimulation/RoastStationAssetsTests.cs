@@ -51,6 +51,11 @@ namespace ToastedVr.RoastSimulation.Tests
             Assert.AreEqual(60, configuration.MaxDischargeAlerts);
             Assert.AreEqual(40, configuration.MaxAlertIdLength);
             Assert.AreEqual(3f, configuration.RejectionMessageSeconds, 1e-6);
+            Assert.AreEqual("/api/v1/roasting/sessions", configuration.SessionsPath);
+            // GET /feedback puede tardar ~125 s cuando la IA la escribe por primera vez.
+            Assert.GreaterOrEqual(configuration.FeedbackTimeoutSeconds, 125);
+            Assert.AreEqual(5f, configuration.EvaluationPollIntervalSeconds, 1e-6);
+            Assert.AreEqual(24, configuration.EvaluationPollMaxAttempts);
         }
 
         [Test]

@@ -15,6 +15,10 @@ MonoBehaviour:
   simulationsPath: /api/v1/roasting/simulations
   requestTimeoutSeconds: 15
   pollIntervalSeconds: 1
+  sessionsPath: /api/v1/roasting/sessions
+  feedbackTimeoutSeconds: 130
+  evaluationPollIntervalSeconds: 5
+  evaluationPollMaxAttempts: 24
   dischargeRetryDelaySeconds: 1
   dischargeMaxRetries: 3
   maxDischargeAlerts: 60

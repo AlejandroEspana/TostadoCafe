@@ -11,6 +11,14 @@ namespace ToastedVr.RoastSimulation
         [Tooltip("Seconds between state queries. The server deletes a simulation nobody queries for 120 s.")]
         [SerializeField, Min(0.1f)] private float pollIntervalSeconds;
 
+        [Header("Session result")]
+        [SerializeField] private string sessionsPath;
+        [Tooltip("The AI can take about two minutes to write the feedback.")]
+        [SerializeField, Min(1)] private int feedbackTimeoutSeconds;
+        [Tooltip("Same rhythm as the web while the AI grades the decisions.")]
+        [SerializeField, Min(0.5f)] private float evaluationPollIntervalSeconds;
+        [SerializeField, Min(1)] private int evaluationPollMaxAttempts;
+
         [Header("Discharge")]
         [Tooltip("At the turning point the backend answers 409 for one tick; the discharge is repeated after this delay.")]
         [SerializeField, Min(0.1f)] private float dischargeRetryDelaySeconds;
@@ -40,6 +48,10 @@ namespace ToastedVr.RoastSimulation
         public string SimulationsPath => simulationsPath;
         public int RequestTimeoutSeconds => requestTimeoutSeconds;
         public float PollIntervalSeconds => pollIntervalSeconds;
+        public string SessionsPath => sessionsPath;
+        public int FeedbackTimeoutSeconds => feedbackTimeoutSeconds;
+        public float EvaluationPollIntervalSeconds => evaluationPollIntervalSeconds;
+        public int EvaluationPollMaxAttempts => evaluationPollMaxAttempts;
         public float DischargeRetryDelaySeconds => dischargeRetryDelaySeconds;
         public int DischargeMaxRetries => dischargeMaxRetries;
         public int MaxDischargeAlerts => maxDischargeAlerts;
