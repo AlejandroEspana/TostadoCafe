@@ -19,6 +19,7 @@ namespace ToastedVr.RoastSimulation
             controller.Changed += Render;
             controller.MessageChanged += ShowMessage;
             controller.Finished += ShowResult;
+            controller.EvaluationUpdated += ShowResult;
             Render();
         }
 
@@ -27,6 +28,7 @@ namespace ToastedVr.RoastSimulation
             controller.Changed -= Render;
             controller.MessageChanged -= ShowMessage;
             controller.Finished -= ShowResult;
+            controller.EvaluationUpdated -= ShowResult;
         }
 
         private void ShowMessage(string message)
@@ -34,8 +36,14 @@ namespace ToastedVr.RoastSimulation
             messageText.text = message;
         }
 
+        // Llega al descargar y otra vez cuando la IA termina de calificar, con la nota final.
         private void ShowResult(RoastSessionSummary session)
         {
+            if (session == null || !controller.IsPowered)
+            {
+                return;
+            }
+
             finishedSession = session;
             Render();
         }
