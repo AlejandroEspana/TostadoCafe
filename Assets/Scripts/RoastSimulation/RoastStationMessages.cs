@@ -75,6 +75,12 @@ namespace ToastedVr.RoastSimulation
 
         [Header("Roast result")]
         [SerializeField] private string resultTitle;
+        [Tooltip("{0} = section title. TextMeshPro rich text.")]
+        [SerializeField] private string resultSectionFormat;
+        [Tooltip("{0} = label, {1} = value.")]
+        [SerializeField] private string resultRowFormat;
+        [Tooltip("{0} = criterion level line, {1} = justification. TextMeshPro rich text.")]
+        [SerializeField] private string resultCriterionFormat;
         [SerializeField] private string resultFinalScoreLabel;
         [Tooltip("{0} = final score, {1} = grade name.")]
         [SerializeField] private string resultScoreWithGradeFormat;
@@ -142,6 +148,9 @@ namespace ToastedVr.RoastSimulation
         public string RoastFinishedMessage => roastFinishedMessage;
         public string ActionNotAvailableMessage => actionNotAvailableMessage;
         public string ResultTitle => resultTitle;
+        public string ResultSectionFormat => resultSectionFormat;
+        public string ResultRowFormat => resultRowFormat;
+        public string ResultCriterionFormat => resultCriterionFormat;
         public string ResultFinalScoreLabel => resultFinalScoreLabel;
         public string ResultScoreWithGradeFormat => resultScoreWithGradeFormat;
         public string ResultRulesScoreFormat => resultRulesScoreFormat;

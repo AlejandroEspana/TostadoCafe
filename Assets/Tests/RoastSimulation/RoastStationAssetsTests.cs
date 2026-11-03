@@ -82,6 +82,9 @@ namespace ToastedVr.RoastSimulation.Tests
                 string.Format(messages.ResultPartScoreFormat, 70.5);
                 string.Format(messages.ResultCriterionLevelFormat, "x", 2, 3);
                 string.Format(messages.ResultNotApplicableFormat, "x");
+                string.Format(messages.ResultSectionFormat, "x");
+                string.Format(messages.ResultRowFormat, "x", "y");
+                string.Format(messages.ResultCriterionFormat, "x", "y");
             });
         }
 
