@@ -1,7 +1,16 @@
 ﻿<Solution>
+  <Project Path="ToastedVr.RoastVoice.csproj" />
   <Project Path="Assembly-CSharp.csproj" />
-  <Project Path="Unity.XR.Interaction.Toolkit.Samples.StarterAssets.csproj" />
+  <Project Path="ToastedVr.SessionRefresh.Tests.csproj" />
+  <Project Path="ToastedVr.RoastVoice.Tests.csproj" />
+  <Project Path="ToastedVr.RoastAlerts.Tests.csproj" />
   <Project Path="Assembly-CSharp-Editor.csproj" />
+  <Project Path="ToastedVr.RoastSimulation.Tests.csproj" />
   <Project Path="Unity.XR.Interaction.Toolkit.Samples.DeviceSimulator.csproj" />
+  <Project Path="ToastedVr.RoastAlerts.csproj" />
+  <Project Path="Unity.XR.Interaction.Toolkit.Samples.StarterAssets.csproj" />
+  <Project Path="ToastedVr.SessionRefresh.csproj" />
+  <Project Path="ToastedVr.RoastSimulation.csproj" />
+  <Project Path="ToastedVr.RoastSimulation.Editor.csproj" />
   <Project Path="Unity.XR.Interaction.Toolkit.Samples.StarterAssets.Editor.csproj" />
 </Solution>

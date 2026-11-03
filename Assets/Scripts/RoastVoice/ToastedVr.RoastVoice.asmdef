@@ -1,0 +1,21 @@
+{
+    "name": "ToastedVr.RoastVoice",
+    "rootNamespace": "ToastedVr.RoastVoice",
+    "references": [
+        "ToastedVr.RoastSimulation",
+        "ToastedVr.SessionRefresh",
+        "Unity.XR.Interaction.Toolkit",
+        "Unity.TextMeshPro"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "Newtonsoft.Json.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

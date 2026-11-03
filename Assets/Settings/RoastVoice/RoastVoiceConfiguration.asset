@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab52710ca7d34b0b9f92d84b6bfc306f, type: 3}
+  m_Name: RoastVoiceConfiguration
+  m_EditorClassIdentifier:
+  questionsPath: /api/v1/roasting/assistant/questions
+  requestTimeoutSeconds: 35
+  sampleRateHz: 16000
+  minRecordingSeconds: 0.3
+  maxRecordingSeconds: 15
+  maxAudioBytes: 600000

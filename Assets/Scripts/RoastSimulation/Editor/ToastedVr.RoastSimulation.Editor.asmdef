@@ -1,0 +1,22 @@
+{
+    "name": "ToastedVr.RoastSimulation.Editor",
+    "rootNamespace": "ToastedVr.RoastSimulation.Editor",
+    "references": [
+        "ToastedVr.RoastSimulation",
+        "ToastedVr.RoastVoice",
+        "ToastedVr.RoastAlerts",
+        "Unity.XR.Interaction.Toolkit",
+        "Unity.TextMeshPro"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
