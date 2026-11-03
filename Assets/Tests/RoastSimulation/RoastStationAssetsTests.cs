@@ -69,6 +69,7 @@ namespace ToastedVr.RoastSimulation.Tests
                 string.Format(messages.FirstCrackFormat, "x");
                 string.Format(messages.SecondCrackFormat, "x");
                 string.Format(messages.ScoreFormat, 80, "x");
+                string.Format(messages.ChartTickFormat, 198);
             });
         }
 
@@ -119,7 +120,8 @@ namespace ToastedVr.RoastSimulation.Tests
                 messages.PhaseOffName, messages.CrackPendingText, messages.ConnectingMessage, messages.OfflineMessage,
                 messages.SessionExpiredMessage, messages.SimulationLostMessage, messages.DischargingMessage,
                 messages.EvaluationPendingMessage, messages.UnexpectedErrorMessage, messages.BurnedAlarm,
-                messages.BakedAlarm, messages.BurnWarningAlarm, messages.AlarmLimitExceededAlarm, messages.ChargeOvershootAlarm
+                messages.BakedAlarm, messages.BurnWarningAlarm, messages.AlarmLimitExceededAlarm, messages.ChargeOvershootAlarm,
+                messages.ChartTitle, messages.ChartTitleFinal, messages.ChartAxisTitle
             })
             {
                 Assert.IsFalse(string.IsNullOrWhiteSpace(text));
