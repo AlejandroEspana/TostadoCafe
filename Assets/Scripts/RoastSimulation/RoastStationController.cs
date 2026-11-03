@@ -14,6 +14,9 @@ namespace ToastedVr.RoastSimulation
 
         private RoastSimulationApiClient client;
         private RoastStatePoller poller;
+        private RoastSessionsApiClient sessionsClient;
+        private RoastEvaluationPoller evaluationPoller;
+        private int resultVersion;
         private DeliveredAlertLog deliveredAlerts;
         private int? pendingGas;
         private bool gasInFlight;
@@ -29,6 +32,11 @@ namespace ToastedVr.RoastSimulation
         public event Action<RoastState> TickReceived;
         public event Action<string> RoastStarted;
 
+        // Para el resultado: la nota final cuando la IA termina de calificar (o se cansa de esperar) y la
+        // retroalimentación, que es null si no estuvo disponible.
+        public event Action<RoastSessionSummary> EvaluationUpdated;
+        public event Action<string> FeedbackReceived;
+
         public RoastSimulationConfiguration Configuration => configuration;
         public RoastStationMessages Messages => messages;
         public string SimulationId { get; private set; }
@@ -37,6 +45,8 @@ namespace ToastedVr.RoastSimulation
         public bool IsReady => client != null && client.IsConfigured && !sessionExpired;
         public bool IsPowered => SimulationId != null;
         public string Phase => State?.Phase;
+        public RoastSessionSummary LastSession { get; private set; }
+        public bool EvaluationTimedOut { get; private set; }
 
         // Ticks guardados del tueste actual, en orden, para la curva. Siguen ahí después de descargar.
         public IReadOnlyList<RoastState> Ticks => poller != null ? poller.Buffer.Ticks : Array.Empty<RoastState>();
@@ -48,6 +58,11 @@ namespace ToastedVr.RoastSimulation
             poller.StateReceived += OnPolledState;
             poller.TickReceived += tick => TickReceived?.Invoke(tick);
             deliveredAlerts = new DeliveredAlertLog(configuration.MaxDischargeAlerts, configuration.MaxAlertIdLength);
+            sessionsClient = new RoastSessionsApiClient(backendBaseUrl, configuration.SessionsPath, configuration.RequestTimeoutSeconds,
+                configuration.FeedbackTimeoutSeconds, sender);
+            evaluationPoller = new RoastEvaluationPoller(sessionsClient, configuration.EvaluationPollIntervalSeconds, configuration.EvaluationPollMaxAttempts);
+            evaluationPoller.Updated += OnEvaluationUpdated;
+            evaluationPoller.TimedOut += OnEvaluationTimedOut;
             poller.PollFailed += result => HandleFailure(result.Failure, result.Error);
             Changed?.Invoke();
         }
@@ -154,6 +169,7 @@ namespace ToastedVr.RoastSimulation
             }
 
             SimulationId = result.Value.SimulationId;
+            ForgetResult();
             deliveredAlerts.Clear();
             ClearMessage();
             ApplyState(result.Value.State);
@@ -164,6 +180,7 @@ namespace ToastedVr.RoastSimulation
         private IEnumerator PowerOff()
         {
             var simulationId = SimulationId;
+            evaluationPoller.Stop();
             ResetStation();
             ClearMessage();
 
@@ -213,6 +230,7 @@ namespace ToastedVr.RoastSimulation
                     ClearMessage();
                     ApplyState(result.Value.State);
                     Finished?.Invoke(result.Value.Session);
+                FollowResult(result.Value.Session);
                     break;
                 }
 
@@ -227,6 +245,57 @@ namespace ToastedVr.RoastSimulation
             }
 
             SetBusy(false);
+        }
+
+        private void FollowResult(RoastSessionSummary session)
+        {
+            LastSession = session;
+            EvaluationTimedOut = false;
+            if (session == null)
+            {
+                return;
+            }
+
+            if (RoastEvaluationPoller.IsPending(session))
+            {
+                StartCoroutine(evaluationPoller.Run(session.Id));
+            }
+
+            StartCoroutine(RequestFeedback(session.Id, resultVersion));
+        }
+
+        // Un tueste nuevo descarta lo que siga llegando del anterior.
+        private void ForgetResult()
+        {
+            resultVersion++;
+            evaluationPoller.Stop();
+            LastSession = null;
+            EvaluationTimedOut = false;
+        }
+
+        private IEnumerator RequestFeedback(long sessionId, int version)
+        {
+            RoastApiResult<RoastFeedback> result = null;
+            yield return sessionsClient.GetFeedback(sessionId, r => result = r);
+            if (version != resultVersion)
+            {
+                yield break;
+            }
+
+            var feedback = result.IsSuccess && !string.IsNullOrWhiteSpace(result.Value.Feedback) ? result.Value.Feedback.Trim() : null;
+            FeedbackReceived?.Invoke(feedback);
+        }
+
+        private void OnEvaluationUpdated(RoastSessionSummary session)
+        {
+            LastSession = session;
+            EvaluationUpdated?.Invoke(session);
+        }
+
+        private void OnEvaluationTimedOut()
+        {
+            EvaluationTimedOut = true;
+            EvaluationUpdated?.Invoke(LastSession);
         }
 
         private void HandleActionResult(RoastApiResult<SimulationStateResponse> result)
@@ -314,6 +383,7 @@ namespace ToastedVr.RoastSimulation
         private void OnDestroy()
         {
             poller?.Stop();
+            evaluationPoller?.Stop();
         }
     }
 }
